@@ -11,25 +11,6 @@ const second_quad = 21
 const third_quad = 41
 const fourth_quad = 100
 
-export function _calculateNumPeople(angle){
-    if(angle<Math.PI/2){
-        numPeople = 2+angle/(Math.PI/2/(first_quad-2))
-        //first 90 degrees
-        //DO ALL THIS CALCULATION IN THE CIRCLEBAR AREA NOT IN HERE.>>>>> So works with animation
-        //Also so this isn't set before toAngle changes through threading which is happening
-    }
-    else if(angle<Math.PI){
-        numPeople = first_quad+(angle-Math.PI/2)/(Math.PI/2/(second_quad-first_quad))
-    }
-    else if(angle<3*Math.PI/2){
-        numPeople = second_quad+(angle-Math.PI)/(Math.PI/2/(third_quad-second_quad))
-    }
-    else{
-        numPeople = third_quad+(angle-3*Math.PI/2)/(Math.PI/2/(fourth_quad-third_quad))
-    }
-    return Math.floor(numPeople)
-}
-
 export function _calculateAngle(numPeople){
     if(numPeople<first_quad){
         angle = (numPeople-2)*(Math.PI/2/(first_quad-2))
