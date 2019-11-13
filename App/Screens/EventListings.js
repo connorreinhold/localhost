@@ -127,8 +127,8 @@ export default class EventListings extends Component {
                 maxPeople: thisEvent.capacity,
                 hostId: thisEvent.creator,
                 hostPic: "",
+                anonymous: thisEvent.anonymous,
                 privacySetting: thisEvent.privacySetting,
-                // privacySetting 1 = public, 2 = private
                 invited: isInvited,
                 id: thisEvent._id,
             }
@@ -388,6 +388,7 @@ export default class EventListings extends Component {
                                     hostId={item.hostId}
                                     navigation={this.props.navigation}
                                     eventId={item.id}
+                                    anonymous = {item.anonymous}
                                     privacySetting={item.privacySetting}
                                     invited={item.invited}
                                     _handleLeft={this._handleLeft}

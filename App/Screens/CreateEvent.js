@@ -5,10 +5,13 @@ import {
 } from 'react-native'
 import DatePicker from 'react-native-datepicker'
 import { Header } from 'react-navigation'
-import CircleBar, { _calculateNumPeople, _calculateAngle } from '../Components/CircleBar.js'
-import { getTopBarColor } from '../Functions/ColorFuncs.js'
+import MultiSlider from '@ptomasroos/react-native-multi-slider'
+
+
+import { getTopBarColor, dimCalculate, Calculate } from '../Functions/ColorFuncs.js'
 import StaticGlobal from '../Functions/StaticGlobal.js'
 import { parseDate } from '../Functions/TimeFuncs'
+import { Icon } from 'react-native-elements'
 
 const heightPixel = (Dimensions.get('window').height - Header.HEIGHT) / 667
 const widthPixel = Dimensions.get('window').width / 375
@@ -18,16 +21,12 @@ const pictureSize = 60 * heightPixel
 
 const textLeftMargin = 15 * widthPixel
 
-const titleHeight = 60 * heightPixel
-const timeHeight = 50 * heightPixel
-const locationHeight = 55 * heightPixel
+const timeHeight = 40 * heightPixel
+const locationHeight = 40 * heightPixel
 const descriptionHeight = 100 * heightPixel
 
 const radioIconSize = 24 * widthPixel
 
-const circleRadius = 60 * widthPixel
-const circleAreaHeight = 140 * widthPixel
-const circleAreaLabelHeight = 30 * heightPixel
 
 export default class CreateEvent extends Component {
 
@@ -56,15 +55,16 @@ export default class CreateEvent extends Component {
             titleText: "",
             keyboardAvoidingEnabled: false,
             date: this.nextHour,
-            dateDisplayText: "",
+            dateDisplayText: parseDate(this.nextHour),
             myPicture: "",
             locationText: "",
             descriptionText: "",
             locationLat: 0,
             locationLng: 0,
+            scrollEnabled: true,
+            anonymous: true,
             privacySetting: "open",
-            numPeople: 3,
-            scrollYOffset: 0,
+            numPeople: 10,
             editing: this.props.navigation.state.params.editing,
             eventId: this.props.navigation.state.params.eventId,
             // an eventid is only passed in if it is currently editing, that is the eventid that will be updated on the database
@@ -98,20 +98,18 @@ export default class CreateEvent extends Component {
                 let name = event.name
                 let time = event.time
                 let privacySetting = event.privacySetting
-                let newAngle = _calculateAngle(capacity)
+                let anonymous = event.anonymous
 
-                let d = new Date(time)
+                let date = new Date(time)
                 this.setState({
                     titleText: name,
                     descriptionText: description,
                     locationText: location,
                     privacySetting: privacySetting,
-                    date: d,
+                    anonymous: anonymous,
+                    date: date,
                     dateDisplayText: parseDate(time),
                     numPeople: capacity,
-                    currentAngleVal: newAngle
-                }, () => {
-                    this.state.currentAngle.setValue(newAngle)
                 })
             }
         }.bind(this));
@@ -168,8 +166,9 @@ export default class CreateEvent extends Component {
                 lng: this.state.locationLng,
                 time: this.state.date,
                 name: this.state.titleText,
-                capacity: _calculateNumPeople(this.state.currentAngleVal),
+                capacity: this.state.numPeople,
                 description: this.state.descriptionText,
+                anonymous: this.state.anonymous,
                 privacySetting: this.state.privacySetting
             })
         }).then(function (response) {
@@ -180,6 +179,9 @@ export default class CreateEvent extends Component {
             }
         }.bind(this));
     }
+
+    enableScroll = () => this.setState({ scrollEnabled: true });
+    disableScroll = () => this.setState({ scrollEnabled: false });
 
     _renderItem (item) {
         var endDate = new Date();
@@ -194,7 +196,7 @@ export default class CreateEvent extends Component {
             else if (this.state.privacySetting === "public") {
                 backgroundColor2 = getTopBarColor()
             }
-            else if(this.state.privacySetting === "private") {
+            else if (this.state.privacySetting === "private") {
                 backgroundColor3 = getTopBarColor()
             }
             return (
@@ -206,7 +208,7 @@ export default class CreateEvent extends Component {
                             style={styles.creatorPic}
                         />
                         <View style={{ height: creatorPicMargins }} />
-                        <View style={[styles.categoryTextArea, { height: titleHeight }]}>
+                        <View style={[styles.categoryTextArea]}>
                             <View style={{ width: textLeftMargin }} />
                             <View style={{ justifyContent: 'center', width: 375 * widthPixel - 2 * textLeftMargin }}>
                                 <TextInput
@@ -220,12 +222,39 @@ export default class CreateEvent extends Component {
                                 />
                             </View>
                         </View>
-                        <View style={{ height: 10 * heightPixel }} />
-                        <View style={{ height: circleAreaLabelHeight }}>
-                            <Text style={{ fontSize: 18 * widthPixel, fontFamily: 'Avenir', fontWeight: '800' }}>
-                                Event Capacity
+                        <View style={{ flexDirection: 'row', left: 65 * widthPixel, width: '100%', alignItems: 'center' }}>
+                            <View>
+                                <View style={{ height: 10 * heightPixel }} />
+                                <Text style={{ fontSize: 18 * widthPixel, fontFamily: 'Avenir', fontWeight: '400' }}>
+                                    Event Capacity:
+                                </Text>
+                            </View>
+                            <View style={{ width: 25 * widthPixel }} />
+                            <Text style={{ fontSize: 68 * widthPixel, fontFamily: 'Avenir', color: dimCalculate(this.state.numPeople, 100) }}>
+                                {this.state.numPeople}
                             </Text>
                         </View>
+                        <MultiSlider
+                            trackStyle={{ height: 30 * heightPixel, backgroundColor: 'rgb(220,220,220)' }}
+                            selectedStyle={{ borderRadius: 15 * widthPixel, borderTopRightRadius: 0 * widthPixel, backgroundColor: dimCalculate(this.state.numPeople, 100) }}
+                            unselectedStyle={{ borderRadius: 15 * widthPixel, borderTopLeftRadius: 0 * widthPixel }}
+
+                            values={[this.state.numPeople]}
+                            onValuesChange={(value) => {
+                                this.setState({
+                                    numPeople: value[0]
+                                })
+                            }}
+                            customMarker={(e) => {
+                                return <View style={{ width: 25 * widthPixel, height: 25 * widthPixel, borderRadius: 7 * widthPixel, backgroundColor: Calculate(this.state.numPeople, 100) }} />
+                            }}
+                            min={2}
+                            max={100}
+                            step={1}
+                            allowOverlap={false}
+                            snapped={true}
+                        />
+                        <View style={{ height: 10 * heightPixel }} />
                         <View style={[styles.categoryTextArea, { height: timeHeight }]}>
                             <DatePicker
                                 style={{ zIndex: 4, justifyContent: 'center', height: '100%', width: 300 * widthPixel, opacity: 0 }}
@@ -287,17 +316,17 @@ export default class CreateEvent extends Component {
                             </View>
                         </View>
                         <View style={[styles.categoryTextArea, { flexDirection: 'row', height: locationHeight }]}>
-                            <View style = {{width: textLeftMargin}}/>
+                            <View style={{ width: textLeftMargin }} />
                             <View style={{ justifyContent: 'center', width: 375 * widthPixel - 2 * textLeftMargin }}>
-                                <TextInput 
-                                    onChangeText = {(text) => {
+                                <TextInput
+                                    onChangeText={(text) => {
                                         this.setState({
                                             locationText: text
                                         })
                                     }}
-                                    value = {this.state.locationText}
-                                    placeholder = "Location"
-                                    placeholderTextColor = 'rgb(170,170,170)'
+                                    value={this.state.locationText}
+                                    placeholder="Location"
+                                    placeholderTextColor='rgb(170,170,170)'
                                     style={{
                                         fontFamily: 'Avenir',
                                         fontWeight: '500',
@@ -306,85 +335,95 @@ export default class CreateEvent extends Component {
                                 />
                             </View>
                         </View>
-                        <View style = {{height: 5*heightPixel}}/>
-                        <View style = {{width: '90%'}}>
-                            <Text style={styles.descriptiveText}>
-                                    Note: Location will only be displayed to event members.
-                            </Text>
-                        </View>
-                        <View style = {{height: 40*heightPixel}}/>
-                        <View style = {{width: '100%', flexDirection: 'row'}}>
-                            <View style = {{width: textLeftMargin}}/>
-                            <Text style = {styles.headerText}>
-                                Motivational Speech:
-                            </Text>
-                        </View>
                         <View style={[styles.categoryTextArea, { height: descriptionHeight }]}>
                             <View style={{ width: textLeftMargin }} />
-                            <View style={{ width: 375 * widthPixel - 2 * textLeftMargin }}>
+                            <View style={{ width: 375 * widthPixel - 1.8 * textLeftMargin }}>
                                 <TextInput
                                     multiline={true}
                                     blurOnSubmit={true}
                                     onFocus={() => this.setState({ keyboardAvoidingEnabled: true })}
-                                    style={[styles.categoryText, { color: 'rgb(30,164,133)' }]}
+                                    style={[styles.categoryText, { color: 'black' }]}
                                     onChangeText={(descriptionText) => this.setState({ descriptionText })}
                                     value={this.state.descriptionText}
-                                    placeholder="Convince the bums to join your event"
+                                    placeholder="Convince the bums why they should join..."
                                     placeholderTextColor="rgb(170,170,170)"
                                 />
                             </View>
                         </View>
-                        <View style={{ height: 20*heightPixel}} />
-                        <View style = {{width: "90%"}}>
-                            <View style = {{flexDirection: 'row', alignItems: "center"}}>
-                                <TouchableWithoutFeedback onPress={this._onFirstPress.bind(this)}>
-                                    <View style = {{width: 24*widthPixel, height: 24*widthPixel, justifyContent: 'center', alignItems: "center", borderWidth: 1*widthPixel, borderColor: 'rgb(200,200,200)', borderRadius: 10*widthPixel}}>
-                                        <View style={{ width: 14*widthPixel, height: 14*widthPixel, borderRadius: 7*widthPixel, backgroundColor: backgroundColor1 }}/>
+                        <View style={{ height: 10 * heightPixel }} />
+                        <View style={{ width: "90%" }}>
+                            <TouchableWithoutFeedback onPress={this._onFirstPress.bind(this)}>
+                                <View style={{ flexDirection: 'row', alignItems: "center" }}>
+                                    <View style={{ width: 24 * widthPixel, height: 24 * widthPixel, justifyContent: 'center', alignItems: "center", borderWidth: 1 * widthPixel, borderColor: 'rgb(215,215,215)', borderRadius: 10 * widthPixel }}>
+                                        <View style={{ width: 14 * widthPixel, height: 14 * widthPixel, borderRadius: 7 * widthPixel, backgroundColor: backgroundColor1 }} />
                                     </View>
-                                </TouchableWithoutFeedback>
-                                <View style = {{width: 5*widthPixel}}/>
-                                <Text style={styles.radioIconText}>
-                                    Open
+                                    <View style={{ width: 5 * widthPixel }} />
+                                    <Text style={styles.radioIconText}>
+                                        Open
                                 </Text>
-                            </View>
-                            <View style = {{height: 4*heightPixel}}/>
+                                </View>
+                            </TouchableWithoutFeedback>
+                            <View style={{ height: 4 * heightPixel }} />
                             <Text style={styles.descriptiveText}>
                                 Event can be viewed and joined by anyone!
                             </Text>
-                            <View style = {{height: 20*heightPixel}}/>
-                            <View style = {{flexDirection: 'row', alignItems: "center"}}>
-                                <TouchableWithoutFeedback onPress={this._onSecondPress.bind(this)}>
-                                    <View style = {{width: 24*widthPixel, height: 24*widthPixel, justifyContent: 'center', alignItems: "center", borderWidth: 1*widthPixel, borderColor: 'rgb(200,200,200)', borderRadius: 10*widthPixel}}>
-                                        <View style={{ width: 14*widthPixel, height: 14*widthPixel, borderRadius: 7*widthPixel, backgroundColor: backgroundColor2 }}/>
+                            <View style={{ height: 20 * heightPixel }} />
+                            <TouchableWithoutFeedback onPress={this._onSecondPress.bind(this)}>
+                                <View style={{ flexDirection: 'row', alignItems: "center" }}>
+                                    <View style={{ width: 24 * widthPixel, height: 24 * widthPixel, justifyContent: 'center', alignItems: "center", borderWidth: 1 * widthPixel, borderColor: 'rgb(215,215,215)', borderRadius: 10 * widthPixel }}>
+                                        <View style={{ width: 14 * widthPixel, height: 14 * widthPixel, borderRadius: 7 * widthPixel, backgroundColor: backgroundColor2 }} />
                                     </View>
-                                </TouchableWithoutFeedback>
-                                <View style = {{width: 5*widthPixel}}/>
-                                <Text style={styles.radioIconText}>
-                                    Public
+                                    <View style={{ width: 5 * widthPixel }} />
+                                    <Text style={styles.radioIconText}>
+                                        Public
                                 </Text>
-                            </View>
-                            <View style = {{height: 4*heightPixel}}/>
+                                </View>
+                            </TouchableWithoutFeedback>
+                            <View style={{ height: 4 * heightPixel }} />
                             <Text style={styles.descriptiveText}>
                                 You have the choice of who can join the event.
                             </Text>
-                            <View style = {{height: 20*heightPixel}}/>
-                            <View style = {{flexDirection: 'row', alignItems: "center"}}>
-                                <TouchableWithoutFeedback onPress={this._onThirdPress.bind(this)}>
-                                    <View style = {{width: 24*widthPixel, height: 24*widthPixel, justifyContent: 'center', alignItems: "center", borderWidth: 1*widthPixel, borderColor: 'rgb(200,200,200)', borderRadius: 10*widthPixel}}>
-                                        <View style={{ width: 14*widthPixel, height: 14*widthPixel, borderRadius: 7*widthPixel, backgroundColor: backgroundColor3 }}/>
+                            <View style={{ height: 20 * heightPixel }} />
+                            <TouchableWithoutFeedback onPress={this._onThirdPress.bind(this)}>
+                                <View style={{ flexDirection: 'row', alignItems: "center" }}>
+                                    <View style={{ width: 24 * widthPixel, height: 24 * widthPixel, justifyContent: 'center', alignItems: "center", borderWidth: 1 * widthPixel, borderColor: 'rgb(215,215,215)', borderRadius: 10 * widthPixel }}>
+                                        <View style={{ width: 14 * widthPixel, height: 14 * widthPixel, borderRadius: 7 * widthPixel, backgroundColor: backgroundColor3 }} />
                                     </View>
-                                </TouchableWithoutFeedback>
-                                <View style = {{width: 5*widthPixel}}/>
-                                <Text style={styles.radioIconText}>
-                                    Private
+                                    <View style={{ width: 5 * widthPixel }} />
+                                    <Text style={styles.radioIconText}>
+                                        Private
                                 </Text>
-                            </View>
-                            <View style = {{height: 4*heightPixel}}/>
+                                </View>
+                            </TouchableWithoutFeedback>
+                            <View style={{ height: 4 * heightPixel }} />
                             <Text style={styles.descriptiveText}>
                                 Members can join by invite only.
                             </Text>
                         </View>
-                        <View style={{ height: 20 * heightPixel }} />
+                        <View style = {{height: 25*heightPixel}}/>
+                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                            <Text style={{ fontFamily: 'Avenir' }}>
+                                Post anonymously:
+                            </Text>
+                            <View style={{ width: 8 * widthPixel }} />
+                            <TouchableOpacity onPress={() => {
+                                this.setState({
+                                    anonymous: !this.state.anonymous
+                                })
+                            }}>
+                                <View style={{ backgroundColor: 'rgb(230,230,230)', width: 16 * widthPixel, height: 16 * widthPixel, borderRadius: 3 * widthPixel, position: 'relative' }}>
+                                    {this.state.anonymous ?
+                                        <Icon
+                                            style={{ position: 'absolute' }}
+                                            name="check"
+                                            type="font-awesome"
+                                            size={16 * widthPixel}
+                                            color={"#3CB371"}
+                                        />
+                                        : <View />}
+                                </View>
+                            </TouchableOpacity>
+                        </View>
                         <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-end' }}>
                             {
                                 this.state.titleText != "" && this.state.dateDisplayText != ""
@@ -431,9 +470,7 @@ export default class CreateEvent extends Component {
                         ref={ref => this.flatlist = ref}
                         style={{ width: '100%' }}
                         data={this.state.page_items}
-                        onScroll={({ nativeEvent }) => {
-                            this.setState({ scrollYOffset: nativeEvent.contentOffset.y })
-                        }}
+                        scrollEnabled={this.state.scrollEnabled}
                         renderItem={({ item }) => (
                             this._renderItem(item)
                         )}
@@ -498,6 +535,6 @@ const styles = StyleSheet.create({
         fontFamily: 'Avenir',
         fontWeight: '700',
         fontSize: 16 * widthPixel,
-        color: "rgb(154, 147, 236)"
+        color: "black"
     }
 })

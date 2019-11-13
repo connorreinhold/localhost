@@ -213,7 +213,7 @@ export default class EventDetails extends PureComponent {
             }
         }
     }
-    _renderCard (description, title, time, guests, maxPeople, hostPic, hostId, invited, eventId, privacySetting, lockPressPic) {
+    _renderCard (description, title, time, guests, maxPeople, hostPic, hostId, invited, eventId, anonymous, privacySetting, lockPressPic) {
         return (
             <View style={{
                 shadowColor: "#a2a2a2",
@@ -231,7 +231,7 @@ export default class EventDetails extends PureComponent {
                         <View style={[styles.topArea, { height: 15 * heightPixel, borderColor: dimCalculate(guests.length, maxPeople) }]} />
                         {this._renderInvitationMessage(guests.length, maxPeople, invited)}
                         {
-                            privacySetting === 2 ?
+                            privacySetting === "private" ?
                                 <View style={{ position: 'absolute', left: 5 * widthPixel, alignItems: 'center', top: 5 * heightPixel }}>
                                     <View style={{
                                         width: 30 * widthPixel,
@@ -263,12 +263,16 @@ export default class EventDetails extends PureComponent {
                                 <View style={{ width: 10 * widthPixel }} />
                                 {
                                     !lockPressPic ?
-                                        <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate({
-                                            routeName: 'Profile',
-                                            params: { userId: hostId },
-                                            key: Math.random() * 10000,
-                                            // key allows react-native to differentiate between different instances of the same route
-                                        })}>
+                                        <TouchableWithoutFeedback onPress={() => {
+                                            if (!anonymous) {
+                                                this.props.navigation.navigate({
+                                                    routeName: 'Profile',
+                                                    params: { userId: hostId },
+                                                    key: Math.random() * 10000,
+                                                    // key allows react-native to differentiate between different instances of the same route
+                                                })
+                                            }
+                                        }}>
                                             {hostPic == "" ?
                                                 <View style={styles.hostPic} />
                                                 :
@@ -321,14 +325,14 @@ export default class EventDetails extends PureComponent {
                                         flex: 1
                                     }}>
                                         <Animated.View style={{
-                                        transform:
-                                            [{
-                                                rotate: this.state.circleSpinValue.interpolate({
-                                                    inputRange: [0, 1],
-                                                    outputRange: ['0deg', '360deg']
-                                                })
-                                            }],
-                                    }}>
+                                            transform:
+                                                [{
+                                                    rotate: this.state.circleSpinValue.interpolate({
+                                                        inputRange: [0, 1],
+                                                        outputRange: ['0deg', '360deg']
+                                                    })
+                                                }],
+                                        }}>
                                             <CircleBar numPeople={guests.length} maxPeople={maxPeople}
                                                 radius={widthPixel * 25} />
                                         </Animated.View>
@@ -390,9 +394,10 @@ export default class EventDetails extends PureComponent {
         let hostId = this.props.hostId
         let invited = this.props.invited
         let eventId = this.props.eventId
-        let privacySetting = this.props.privacySetting // 1 - public, 2 - private
-        let lockSwiping = this.props.lockSwiping //true or locked for EventDetails on profile.
-        let lockPressPic = this.props.lockPressPic // true if the person is hosting in past events
+        let anonymous = this.props.anonymous
+        let privacySetting = this.props.privacySetting
+        let lockSwiping = this.props.lockSwiping
+        let lockPressPic = this.props.lockPressPic
 
         let swipeRight = [
             <TouchableWithoutFeedback onPress={this._onRightAction.bind(this)}>
@@ -450,7 +455,7 @@ export default class EventDetails extends PureComponent {
                 <View style={{ height: 15 * heightPixel }} />
 
                 {lockSwiping ?
-                    this._renderCard(description, title, time, guests, maxPeople, hostPic, hostId, invited, eventId, privacySetting, lockPressPic)
+                    this._renderCard(description, title, time, guests, maxPeople, hostPic, hostId, invited, eventId, anonymous, privacySetting, lockPressPic)
                     :
                     <Swipeable
                         rightButtonWidth={180 * widthPixel}

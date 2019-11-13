@@ -266,18 +266,18 @@ export default class Event extends Component {
                                         <Text style={{ fontSize: 14 * widthPixel, fontFamily: 'Arial', fontWeight: '800', color: 'rgb(155,71,212)', }}>
                                             Applications
                                         </Text>
-                                        {unseenApplications> 0
-                                        ?
-                                        <View style = {{flexDirection: 'row'}}>
-                                            <View style = {{width: 15*widthPixel}}/>
-                                            <View style = {{width: 14*widthPixel, height: 14*widthPixel, borderRadius:7*widthPixel, backgroundColor: 'rgb(155,71,212)', justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
-                                                <View style = {{width: 0.5*widthPixel}}/>
-                                                <Text style = {{fontFamily: "Arial", color: "white", fontSize: 10*widthPixel, fontWeight: '800'}}>
-                                                    {unseenApplications}
-                                                </Text>
+                                        {unseenApplications > 0
+                                            ?
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <View style={{ width: 15 * widthPixel }} />
+                                                <View style={{ width: 14 * widthPixel, height: 14 * widthPixel, borderRadius: 7 * widthPixel, backgroundColor: 'rgb(155,71,212)', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
+                                                    <View style={{ width: 0.5 * widthPixel }} />
+                                                    <Text style={{ fontFamily: "Arial", color: "white", fontSize: 10 * widthPixel, fontWeight: '800' }}>
+                                                        {unseenApplications}
+                                                    </Text>
+                                                </View>
                                             </View>
-                                        </View>
-                                    :<View/>}
+                                            : <View />}
                                     </View>
                                 </View>
                             </TouchableOpacity>
@@ -355,6 +355,7 @@ export default class Event extends Component {
         let guests = this.props.guests
         let maxPeople = this.props.maxPeople
         let creator = this.props.creator
+        let anonymous = this.props.anonymous
         let hostPic = this.props.hostPic;
         let location = this.props.location
         let unseenMessages = this.props.unseenMessages
@@ -520,12 +521,16 @@ export default class Event extends Component {
                             <View style={{ height: 14 * heightPixel }} />
                             <View style={{ flexDirection: 'row', width: '100%' }}>
                                 <View style={{ width: 10 * widthPixel }} />
-                                <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate({
-                                    routeName: 'Profile',
-                                    params: { userId: creator },
-                                    key: Math.random() * 10000,
-                                    // key allows react-native to differentiate between different instances of the same route
-                                })}>
+                                <TouchableWithoutFeedback onPress={() => {
+                                    if (!anonymous) {
+                                        this.props.navigation.navigate({
+                                            routeName: 'Profile',
+                                            params: { userId: creator },
+                                            key: Math.random() * 10000,
+                                            // key allows react-native to differentiate between different instances of the same route
+                                        })
+                                    }
+                                }}>
                                     {hostPic == "" ?
                                         <View style={styles.hostPic} />
                                         :

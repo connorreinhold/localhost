@@ -52,6 +52,7 @@ export default withNavigation(class HostingEvents extends Component {
                 applications: toParse[i].applications,
                 maxPeople: toParse[i].capacity,
                 description: toParse[i].description,
+                anonymous: toParse[i].anonymous,
                 privacySetting: toParse[i].privacySetting,
                 id: toParse[i]._id,
             }
@@ -227,6 +228,7 @@ export default withNavigation(class HostingEvents extends Component {
                                 maxPeople={item.maxPeople}
                                 location={item.location}
                                 description={item.description}
+                                anonymous = {item.anonymous}
                                 privacySetting={item.privacySetting}
                                 eventId={item.id}
                                 navigation={this.navigation}

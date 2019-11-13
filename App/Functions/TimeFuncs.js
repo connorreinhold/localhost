@@ -7,6 +7,9 @@ export function parseDate (dateString) {
     if (hours > 12) {
         hours = hours % 12
     }
+    if(hours == 0) {
+        hours = 12
+    }
     let minutes = eventTime.getMinutes() + ""
     if (minutes.length === 1) {
         minutes = "0" + minutes

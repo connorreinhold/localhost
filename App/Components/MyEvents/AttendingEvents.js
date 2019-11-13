@@ -37,7 +37,6 @@ export default withNavigation(class AttendingEvents extends Component {
     // unique event
     _appendEventsFromJson (events, toParse) {
         for (var i = 0; i < toParse.length; i++) {
-            let privacySetting = toParse[i].privacySetting
             let newEvent = {
                 title: toParse[i].name,
                 msgNotification: false,
@@ -49,6 +48,7 @@ export default withNavigation(class AttendingEvents extends Component {
                 guests: toParse[i].attendees,
                 applications: toParse[i].applications,
                 maxPeople: toParse[i].capacity,
+                anonymous: toParse[i].anonymous,
                 privacySetting: toParse[i].privacySetting,
                 description: toParse[i].description,
                 id: toParse[i]._id,
@@ -199,6 +199,7 @@ export default withNavigation(class AttendingEvents extends Component {
                                 maxPeople={item.maxPeople}
                                 location={item.location}
                                 description={item.description}
+                                anonymous = {item.anonymous}
                                 privacySetting={item.privacySetting}
                                 eventId={item.id}
                                 navigation={this.navigation}
