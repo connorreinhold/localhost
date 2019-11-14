@@ -196,6 +196,24 @@ export default class Event extends Component {
         })
     }
 
+
+    /*
+{unseenApplications > 0
+    ?
+    <View style={{ flexDirection: 'row' }}>
+        <View style={{ width: 15 * widthPixel }} />
+        <View style={{ width: 14 * widthPixel, height: 14 * widthPixel, borderRadius: 7 * widthPixel, backgroundColor: 'rgb(155,71,212)', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
+            <View style={{ width: 0.5 * widthPixel }} />
+            <Text style={{ fontFamily: "Arial", color: "white", fontSize: 10 * widthPixel, fontWeight: '800' }}>
+                {unseenApplications}
+            </Text>
+        </View>
+    </View>
+    : <View />}
+
+
+
+    */
     _closeDeletePage () {
         Animated.timing(
             this.state.deleteBoxOpacity,
@@ -220,28 +238,10 @@ export default class Event extends Component {
                 <Text style={styles.descriptionFont}>
                     {description}
                 </Text>
-                <View style={{ height: 5 * heightPixel }} />
-                <TouchableOpacity onPress={() => {
-                    this.props._launchModal(eventId, this.props.title)
-                }}>
-                    <View style={{ flexDirection: "row", height: 35 * heightPixel, alignItems: 'center', paddingTop: 3 * heightPixel, paddingBottom: 3 * heightPixel }}>
-                        <Icon
-                            name="envelope"
-                            type="font-awesome"
-                            color="rgb(74,131,210)"
-                            size={13 * widthPixel}
-                        />
-                        <View style={{ flex: 1, left: 7 * widthPixel, minWidth: 200 * widthPixel }}>
-                            <View style={{ height: 1 * heightPixel }} />
-                            <Text style={{ fontSize: 14 * widthPixel, fontFamily: 'Arial', fontWeight: '800', color: 'rgb(74,131,210)', }}>
-                                Invite
-                            </Text>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-                {
-                    hosting ?
-                        <View style={{ zIndex: 3 }}>
+                <View style={{ height: 25 * heightPixel }} />
+                <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%', justifyContent: 'center' }}>
+                    {hosting ?
+                        <View style={{ flexDirection: 'row' }}>
                             <TouchableOpacity onPress={() => {
                                 this.props.navigation.navigate({
                                     routeName: 'Applications',
@@ -254,33 +254,36 @@ export default class Event extends Component {
                                     },
                                 })
                             }}>
-                                <View style={{ minWidth: 150 * widthPixel, height: 35 * heightPixel, flexDirection: "row", paddingTop: 3 * heightPixel, paddingBottom: 3 * heightPixel }}>
+                                <View style={{ flexDirection: 'row' }}>
                                     <Icon
-                                        name="address-card"
+                                        name="id-card"
                                         type="font-awesome"
-                                        color="rgb(155,71,212)"
-                                        size={13 * widthPixel}
+                                        color="rgb(200,120, 255)"
+                                        size={22 * widthPixel}
                                     />
-                                    <View style={{ flexDirection: 'row', height: '100%', alignItems: 'center', left: 7 * widthPixel }}>
-                                        <View style={{ height: 1 * heightPixel }} />
-                                        <Text style={{ fontSize: 14 * widthPixel, fontFamily: 'Arial', fontWeight: '800', color: 'rgb(155,71,212)', }}>
-                                            Applications
-                                        </Text>
-                                        {unseenApplications > 0
-                                            ?
-                                            <View style={{ flexDirection: 'row' }}>
-                                                <View style={{ width: 15 * widthPixel }} />
-                                                <View style={{ width: 14 * widthPixel, height: 14 * widthPixel, borderRadius: 7 * widthPixel, backgroundColor: 'rgb(155,71,212)', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
-                                                    <View style={{ width: 0.5 * widthPixel }} />
-                                                    <Text style={{ fontFamily: "Arial", color: "white", fontSize: 10 * widthPixel, fontWeight: '800' }}>
-                                                        {unseenApplications}
-                                                    </Text>
-                                                </View>
-                                            </View>
-                                            : <View />}
-                                    </View>
                                 </View>
                             </TouchableOpacity>
+                            <View style={{ width: 35 * widthPixel }} />
+                        </View>
+                        : <View />
+                    }
+                    <TouchableOpacity onPress={() => {
+                        this.props._launchModal(eventId, this.props.title)
+                    }}>
+                        <Icon
+                            name="paper-plane-o"
+                            type="font-awesome"
+                            color="rgb(120,200, 255)"
+                            size={23.5 * widthPixel}
+                        />
+                    </TouchableOpacity>
+                    {
+                    hosting ? <View style={{ width: 75 * widthPixel }} />
+                        :
+                        <View style={{ width: 120 * widthPixel }} />
+                    }
+                    {hosting ?
+                        <View style={{ flexDirection: 'row' }}>
                             <TouchableOpacity onPress={() => {
                                 this.props.navigation.navigate({
                                     routeName: 'CreateEvent',
@@ -291,59 +294,26 @@ export default class Event extends Component {
                                     },
                                 })
                             }}>
-                                <View style={{ flexDirection: "row", alignItems: 'center', height: 35 * heightPixel, paddingTop: 3 * heightPixel, paddingBottom: 3 * heightPixel }}>
-                                    <Icon
-                                        name="pencil"
-                                        type="font-awesome"
-                                        color="rgb(0,130,130)"
-                                        size={15 * widthPixel}
-                                    />
-                                    <View style={{ flex: 1, left: 7 * widthPixel }}>
-                                        <View style={{ height: 1 * heightPixel }} />
-                                        <Text style={{ fontSize: 14 * widthPixel, fontFamily: 'Arial', fontWeight: '800', color: 'rgb(0,130,130)', }}>
-                                            Edit
-                                    </Text>
-                                    </View>
-                                </View>
+                                <Icon
+                                    name="dashboard"
+                                    type="font-awesome"
+                                    color="rgba(0,130,130, 0.5)"
+                                    size={26.5 * widthPixel}
+                                />
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={this._openDeletePage.bind(this)}>
-                                <View style={{ height: 35 * heightPixel, flexDirection: "row", alignItems: 'center', paddingTop: 3 * heightPixel, paddingBottom: 3 * heightPixel }}>
-                                    <Icon
-                                        name="times"
-                                        type="font-awesome"
-                                        color="rgb(209,0,0)"
-                                        size={18 * widthPixel}
-                                    />
-                                    <View style={{ left: 7 * widthPixel }}>
-                                        <View style={{ height: 2 * heightPixel }} />
-                                        <Text style={{ fontSize: 14 * widthPixel, fontFamily: 'Arial', fontWeight: '800', color: 'rgb(209,0,0)', }}>
-                                            Delete
-                                        </Text>
-                                    </View>
-                                </View>
-                            </TouchableOpacity>
+                            <View style={{ width: 36.5 * widthPixel }} />
                         </View>
-                        :
-                        // This is stuff for attending, above is stuff for hosting
-                        <View>
-                            <TouchableOpacity onPress={this._openDeletePage.bind(this)}>
-                                <View style={{ flexDirection: "row", alignItems: 'center' }}>
-                                    <Icon
-                                        name="times"
-                                        type="font-awesome"
-                                        color="rgb(209,0,0)"
-                                        size={18 * widthPixel}
-                                    />
-                                    <View style={{ left: 7 * widthPixel }}>
-                                        <View style={{ height: 2 * heightPixel }} />
-                                        <Text style={{ fontSize: 14 * widthPixel, fontFamily: 'Arial', fontWeight: '800', color: 'rgb(209,0,0)', }}>
-                                            Leave
-                                        </Text>
-                                    </View>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                }
+                        : <View />
+                    }
+                    <TouchableOpacity onPress={this._openDeletePage.bind(this)}>
+                        <Icon
+                            name={hosting ? "trash" : "hand-peace-o"}
+                            type="font-awesome"
+                            color="rgba(209,0,0, 0.5)"
+                            size={28 * widthPixel}
+                        />
+                    </TouchableOpacity>
+                </View>
             </View>
         )
     }
@@ -579,7 +549,7 @@ export default class Event extends Component {
                                     }
                                 </View>
                             </Animated.View>
-                            <View style={{ height: 5 * heightPixel }} />
+                            <View style={{ height: 8 * heightPixel }} />
                             <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'center' }}>
                                 <TouchableWithoutFeedback onPress={() => {
                                     this.props.navigation.navigate({

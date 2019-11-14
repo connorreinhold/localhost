@@ -18,7 +18,7 @@ export default class EventListings extends Component {
     //https://reactnavigation.org/docs/en/headers.html
     static navigationOptions = ({ navigation }) => {
         return {
-            title: 'Nearby Experiences',
+            title: 'Nearby Events',
             headerTintColor: 'white',
             headerStyle: {
                 backgroundColor: getTopBarColor()
@@ -28,13 +28,14 @@ export default class EventListings extends Component {
     constructor (props) {
         super(props)
         this.state = {
-            current_id: 4,
             isFetching: true,
             eventListings: [
             ],
             queryText: "",
             appliedModalVisible: false,
             appliedModalOpacity: new Animated.Value(0),
+            // Is the event last applied to an open event?
+            eventOpen: false,
         }
         this._handleLeft = this._leftSwipeHandler.bind(this)
         this._handleRight = this._rightSwipeHandler.bind(this)
@@ -189,7 +190,6 @@ export default class EventListings extends Component {
 
     _leftSwipeHandler (eventId) {
         // remove an event by a specific id
-
         fetch(StaticGlobal.database_url + '/ignoreEvent', {
             method: 'POST',
             headers: {
@@ -212,46 +212,56 @@ export default class EventListings extends Component {
 
     }
 
-    _showModalApplied () {
-        this.state.appliedModalOpacity.setValue(0)
-        this.setState({
-            appliedModalVisible: true
-        }, () => {
-            Animated.timing(
-                this.state.appliedModalOpacity,
-                {
-                    toValue: 1,
-                    duration: 500
-                }
-            ).start(() => {
+    _showModalApplied (eventOpen) {
+        this.setState({eventOpen : eventOpen}, ()=> {
+            this.state.appliedModalOpacity.setValue(0)
+            this.setState({
+                appliedModalVisible: true
+            }, () => {
                 Animated.timing(
                     this.state.appliedModalOpacity,
                     {
                         toValue: 1,
-                        duration: 300
+                        duration: 500
                     }
                 ).start(() => {
                     Animated.timing(
                         this.state.appliedModalOpacity,
                         {
-                            toValue: 0,
-                            duration: 1000
-                        }).start(() => {
-                            this.setState({
-                                appliedModalVisible: false
+                            toValue: 1,
+                            duration: 300
+                        }
+                    ).start(() => {
+                        Animated.timing(
+                            this.state.appliedModalOpacity,
+                            {
+                                toValue: 0,
+                                duration: 1000
+                            }).start(() => {
+                                this.setState({
+                                    appliedModalVisible: false
+                                })
                             })
-                        })
+                    })
                 })
             })
         })
     }
     _rightSwipeHandler (eventId) {
         // remove an event by a specific id
+        var isOpen = false
         var new_data = this.state.eventListings.filter(x => {
+            if (x.id === eventId) {
+                // Keep track of whether the removed event is open or not
+                isOpen = x.privacySetting === "open"
+            }
             return x.id != eventId;
         })
         this.setState({ eventListings: new_data })
-        fetch(StaticGlobal.database_url + '/applyEvent', {
+
+        // If it is open, just join the event, otherwise apply for the event
+        var endpointUrl = isOpen ? "/joinEvent" : "/applyEvent"
+        fetch(StaticGlobal.database_url + endpointUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -306,7 +316,7 @@ export default class EventListings extends Component {
                                 fontWeight: '600',
                                 fontFamily: 'Avenir'
                             }}>
-                                Applied!
+                                {this.state.eventOpen ? "Joined!" : "Applied!"}
                         </Text>
                         </Animated.View>
                         : <View />

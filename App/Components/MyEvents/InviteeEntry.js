@@ -54,35 +54,28 @@ export default withNavigation(class InviteeEntry extends Component {
                     <View style={{ flex: 1, justifyContent: 'center' }}>
                         {
                             invitedStatus === 2 ?
-                                <View style={{ width: 30 * widthPixel, height: 30 * widthPixel, borderRadius: 15 * widthPixel, backgroundColor: 'rgb(160,160,160)', justifyContent: 'center', alignItems: 'center' }}>
-                                    <Icon
-                                        name="envelope-open"
-                                        type="font-awesome"
-                                        color="white"
-                                        size={16 * widthPixel}
-                                    />
-                                </View>
+                                <Icon
+                                    name="envelope-open"
+                                    type="font-awesome"
+                                    color="rgb(130,130,130)"
+                                    size={18 * widthPixel}
+                                />
                                 :
                                 invitedStatus === 1 ?
                                     <TouchableOpacity onPress={() => this.props._onInvite(inviteeId)}>
-                                        <View style={{ width: 30 * widthPixel, height: 30 * widthPixel, borderRadius: 15 * widthPixel, backgroundColor: 'rgb(120,200,255)', justifyContent: 'center', alignItems: 'center' }}>
-                                            <Icon
-                                                name="envelope"
-                                                type="font-awesome"
-                                                color="white"
-                                                size={16 * widthPixel}
-                                            />
-                                        </View>
+                                        <Icon
+                                            name="envelope"
+                                            type="font-awesome"
+                                            color="rgb(120,200,255)"
+                                            size={18 * widthPixel}
+                                        />
                                     </TouchableOpacity>
                                     :
-                                    <View style={{ width: 30 * widthPixel, height: 30 * widthPixel, borderRadius: 15 * widthPixel, backgroundColor: 'rgb(160,160,160)', justifyContent: 'center', alignItems: 'center' }}>
-                                        <Icon
-                                            name="android"
-                                            type="font-awesome"
-                                            color="white"
-                                            size={20 * widthPixel}
-                                        />
-                                    </View>
+                                    <Icon
+                                        name="person"
+                                        color={getTopBarColor()}
+                                        size={25 * widthPixel}
+                                    />
                         }
 
                     </View>

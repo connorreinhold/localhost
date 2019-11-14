@@ -59,8 +59,6 @@ export default class CreateEvent extends Component {
             myPicture: "",
             locationText: "",
             descriptionText: "",
-            locationLat: 0,
-            locationLng: 0,
             scrollEnabled: true,
             anonymous: true,
             privacySetting: "open",
@@ -162,8 +160,8 @@ export default class CreateEvent extends Component {
                 eventId: this.state.eventId,
                 email: global.email,
                 location: this.state.locationText,
-                lat: this.state.locationLat,
-                lng: this.state.locationLng,
+                lat: global.myLatitude,
+                lng: global.myLongitude,
                 time: this.state.date,
                 name: this.state.titleText,
                 capacity: this.state.numPeople,
@@ -352,7 +350,7 @@ export default class CreateEvent extends Component {
                         </View>
                         <View style={{ height: 10 * heightPixel }} />
                         <View style={{ width: "90%" }}>
-                            <TouchableWithoutFeedback onPress={this._onFirstPress.bind(this)}>
+                            <TouchableOpacity onPress={this._onFirstPress.bind(this)}>
                                 <View style={{ flexDirection: 'row', alignItems: "center" }}>
                                     <View style={{ width: 24 * widthPixel, height: 24 * widthPixel, justifyContent: 'center', alignItems: "center", borderWidth: 1 * widthPixel, borderColor: 'rgb(215,215,215)', borderRadius: 10 * widthPixel }}>
                                         <View style={{ width: 14 * widthPixel, height: 14 * widthPixel, borderRadius: 7 * widthPixel, backgroundColor: backgroundColor1 }} />
@@ -362,13 +360,13 @@ export default class CreateEvent extends Component {
                                         Open
                                 </Text>
                                 </View>
-                            </TouchableWithoutFeedback>
+                            </TouchableOpacity>
                             <View style={{ height: 4 * heightPixel }} />
                             <Text style={styles.descriptiveText}>
                                 Event can be viewed and joined by anyone!
                             </Text>
                             <View style={{ height: 20 * heightPixel }} />
-                            <TouchableWithoutFeedback onPress={this._onSecondPress.bind(this)}>
+                            <TouchableOpacity onPress={this._onSecondPress.bind(this)}>
                                 <View style={{ flexDirection: 'row', alignItems: "center" }}>
                                     <View style={{ width: 24 * widthPixel, height: 24 * widthPixel, justifyContent: 'center', alignItems: "center", borderWidth: 1 * widthPixel, borderColor: 'rgb(215,215,215)', borderRadius: 10 * widthPixel }}>
                                         <View style={{ width: 14 * widthPixel, height: 14 * widthPixel, borderRadius: 7 * widthPixel, backgroundColor: backgroundColor2 }} />
@@ -378,13 +376,13 @@ export default class CreateEvent extends Component {
                                         Public
                                 </Text>
                                 </View>
-                            </TouchableWithoutFeedback>
+                            </TouchableOpacity>
                             <View style={{ height: 4 * heightPixel }} />
                             <Text style={styles.descriptiveText}>
                                 You have the choice of who can join the event.
                             </Text>
                             <View style={{ height: 20 * heightPixel }} />
-                            <TouchableWithoutFeedback onPress={this._onThirdPress.bind(this)}>
+                            <TouchableOpacity onPress={this._onThirdPress.bind(this)}>
                                 <View style={{ flexDirection: 'row', alignItems: "center" }}>
                                     <View style={{ width: 24 * widthPixel, height: 24 * widthPixel, justifyContent: 'center', alignItems: "center", borderWidth: 1 * widthPixel, borderColor: 'rgb(215,215,215)', borderRadius: 10 * widthPixel }}>
                                         <View style={{ width: 14 * widthPixel, height: 14 * widthPixel, borderRadius: 7 * widthPixel, backgroundColor: backgroundColor3 }} />
@@ -394,7 +392,7 @@ export default class CreateEvent extends Component {
                                         Private
                                 </Text>
                                 </View>
-                            </TouchableWithoutFeedback>
+                            </TouchableOpacity>
                             <View style={{ height: 4 * heightPixel }} />
                             <Text style={styles.descriptiveText}>
                                 Members can join by invite only.
@@ -402,7 +400,7 @@ export default class CreateEvent extends Component {
                         </View>
                         <View style = {{height: 25*heightPixel}}/>
                         <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                            <Text style={{ fontFamily: 'Avenir' }}>
+                            <Text style={{ fontFamily: 'Avenir', fontSize: 18*widthPixel }}>
                                 Post anonymously:
                             </Text>
                             <View style={{ width: 8 * widthPixel }} />
@@ -411,13 +409,13 @@ export default class CreateEvent extends Component {
                                     anonymous: !this.state.anonymous
                                 })
                             }}>
-                                <View style={{ backgroundColor: 'rgb(230,230,230)', width: 16 * widthPixel, height: 16 * widthPixel, borderRadius: 3 * widthPixel, position: 'relative' }}>
+                                <View style={{ backgroundColor: 'rgb(230,230,230)', width: 28 * widthPixel, height: 28 * widthPixel, borderRadius: 5 * widthPixel, position: 'relative', alignItems: 'center', justifyContent: 'center' }}>
                                     {this.state.anonymous ?
                                         <Icon
                                             style={{ position: 'absolute' }}
                                             name="check"
                                             type="font-awesome"
-                                            size={16 * widthPixel}
+                                            size={20 * widthPixel}
                                             color={"#3CB371"}
                                         />
                                         : <View />}
@@ -526,10 +524,9 @@ const styles = StyleSheet.create({
     },
     descriptiveText: {
         fontFamily: 'Avenir',
-        fontWeight: '500',
-        fontStyle: 'italic',
+        fontWeight: '300',
         color: "rgb(150,150,150)",
-        fontSize: 13 * widthPixel
+        fontSize: 12 * widthPixel
     },
     headerText: {
         fontFamily: 'Avenir',

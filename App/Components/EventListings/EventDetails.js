@@ -81,7 +81,7 @@ export default class EventDetails extends PureComponent {
     //apply is a boolean
     _executeAnimation (apply, expanded) {
         if (apply) {
-            this.props._showModalApplied()
+            this.props._showModalApplied(this.props.privacySetting==="open")
         }
         Animated.timing(
             this.state.fadeAnim,
