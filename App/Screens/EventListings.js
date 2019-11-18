@@ -274,7 +274,7 @@ export default class EventListings extends Component {
         }).then(function (response) {
             let applyResponse = JSON.parse(response._bodyInit);
             if (applyResponse.isSuccess) {
-                console.log("EventListings.js - Applied - " + eventId)
+                console.log("EventListings.js - Applied/Joined - " + eventId)
             } else {
             }
         }.bind(this));
@@ -292,7 +292,7 @@ export default class EventListings extends Component {
                             top: 100 * heightPixel,
                             shadowColor: "#a2a2a2",
                             borderRadius: 10 * widthPixel,
-                            shadowOpacity: 0.5,
+                            shadowOpacity: 0.5,//this.state.appliedModalOpacity,
                             shadowRadius: 8,
                             shadowOffset: {
                                 height: 2,
@@ -303,16 +303,17 @@ export default class EventListings extends Component {
                             opacity: this.state.appliedModalOpacity,
                             alignItems: 'center'
                         }}>
-                            <View style={{ height: 10 * heightPixel }} />
+                            <View style={{ height: 15 * heightPixel }} />
                             <Icon
                                 name='envelope'
                                 type='font-awesome'
                                 size={60 * widthPixel}
-                                color={getTopBarColor()}
+                                color={this.state.eventOpen ? "rgba(90, 219, 143, 0.4)" : "rgba(120, 200, 255, 0.4)"}
                             />
-                            <View style={{ height: 15 * heightPixel }} />
+                            <View style={{ height: 8 * heightPixel }} />
                             <Text style={{
                                 fontSize: 30 * widthPixel,
+                                color: this.state.eventOpen ? "rgb(90, 219, 143)" : "rgb(120, 200, 255)",
                                 fontWeight: '600',
                                 fontFamily: 'Avenir'
                             }}>

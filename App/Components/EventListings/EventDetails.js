@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Text, View, Image, StyleSheet, Dimensions, TouchableWithoutFeedback, Animated } from 'react-native'
+import { Text, View, Image, StyleSheet, Dimensions, TouchableOpacity, TouchableWithoutFeedback, Animated } from 'react-native'
 import { Icon } from 'react-native-elements'
 import CircleBar from '../CircleBar.js'
 import Swipeable from 'react-native-swipeable'
@@ -81,7 +81,7 @@ export default class EventDetails extends PureComponent {
     //apply is a boolean
     _executeAnimation (apply, expanded) {
         if (apply) {
-            this.props._showModalApplied(this.props.privacySetting==="open")
+            this.props._showModalApplied(this.props.privacySetting === "open")
         }
         Animated.timing(
             this.state.fadeAnim,
@@ -400,7 +400,7 @@ export default class EventDetails extends PureComponent {
         let lockPressPic = this.props.lockPressPic
 
         let swipeRight = [
-            <TouchableWithoutFeedback onPress={this._onRightAction.bind(this)}>
+            <TouchableOpacity onPress={this._onRightAction.bind(this)}>
                 <View style={{
                     height: '100%',
                     width: '100%',
@@ -408,21 +408,33 @@ export default class EventDetails extends PureComponent {
                     alignItems: 'flex-start'
                 }}>
                     <View style={{ height: '100%', flexDirection: 'row' }}>
-                        <View style={{ width: 55 * widthPixel }} />
-                        <View style={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                            <Icon
-                                name="check"
-                                type="font-awesome"
-                                size={70 * heightPixel}
-                                color={"#3CB371"}
-                            />
-                        </View>
+                        {privacySetting === "open" ?
+                            <View style = {{height: '100%', flexDirection: 'row'}}>
+                                <View style={{ width: 53 * widthPixel }} />
+                                <View style={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                                    <Text style={{ fontSize: 50 * widthPixel, fontWeight: '700', color: 'rgb(90, 219, 143)', fontFamily: 'Avenir', letterSpacing: 3 * widthPixel }}>
+                                        join
+                                    </Text>
+                                </View>
+                            </View> 
+                            : 
+                            <View style = {{height: '100%', flexDirection: 'row'}}>
+                                <View style={{ width: 33 * widthPixel }} />
+                                <View style={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                                    <Text style={{ fontSize: 50 * widthPixel, fontWeight: '700', color: 'rgb(120, 200, 255)', fontFamily: 'Avenir'}}>
+                                        apply
+                                    </Text>
+                                </View>
+                            </View>
+
+                        }
+
                     </View>
                 </View>
-            </TouchableWithoutFeedback>,
+            </TouchableOpacity>,
         ]
         let swipeLeft = [
-            <TouchableWithoutFeedback onPress={this._onLeftAction.bind(this)}>
+            <TouchableOpacity onPress={this._onLeftAction.bind(this)}>
                 <View style={{
                     height: '100%',
                     width: '100%',
@@ -442,7 +454,7 @@ export default class EventDetails extends PureComponent {
                         <View style={{ width: 55 * widthPixel }} />
                     </View>
                 </View>
-            </TouchableWithoutFeedback>,
+            </TouchableOpacity>,
         ]
 
         //https://www.youtube.com/watch?v=Lt1NGrWEMMQ USE FIREBASE FOR THESE PICTURES

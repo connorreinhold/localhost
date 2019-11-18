@@ -195,25 +195,6 @@ export default class Event extends Component {
                 }).start()
         })
     }
-
-
-    /*
-{unseenApplications > 0
-    ?
-    <View style={{ flexDirection: 'row' }}>
-        <View style={{ width: 15 * widthPixel }} />
-        <View style={{ width: 14 * widthPixel, height: 14 * widthPixel, borderRadius: 7 * widthPixel, backgroundColor: 'rgb(155,71,212)', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
-            <View style={{ width: 0.5 * widthPixel }} />
-            <Text style={{ fontFamily: "Arial", color: "white", fontSize: 10 * widthPixel, fontWeight: '800' }}>
-                {unseenApplications}
-            </Text>
-        </View>
-    </View>
-    : <View />}
-
-
-
-    */
     _closeDeletePage () {
         Animated.timing(
             this.state.deleteBoxOpacity,
@@ -230,21 +211,25 @@ export default class Event extends Component {
 
     _renderExpandedDetails (location, description, hosting, eventId, unseenApplications) {
         return (
-            <View>
+            <View style={{ width: '100%' }}>
                 <Text style={styles.locationFont}>
                     {location}
                 </Text>
-                <View style={{ height: 15 * heightPixel }} />
-                <Text style={styles.descriptionFont}>
-                    {description}
-                </Text>
-                <View style={{ height: 25 * heightPixel }} />
+                {description.length > 0 ?
+                    <View style={{ width: '100%'}}>
+                        <View style={{ height: 15 * heightPixel }} />
+                        <Text style={styles.descriptionFont}>
+                            {description}
+                        </Text>
+                        <View style={{ height: 25 * heightPixel }} />
+                    </View>
+                    : <View />}
                 <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%', justifyContent: 'center' }}>
                     {hosting ?
                         <View style={{ flexDirection: 'row' }}>
                             <TouchableOpacity onPress={() => {
                                 this.props.navigation.navigate({
-                                    routeName: 'Applications',
+                                    routeName: 'Applications', 
                                     params: {
                                         _updateApplicationsViewed: this.props._updateApplicationsViewed,
                                         _onEventChange: this.props._onEventChange,
@@ -255,15 +240,19 @@ export default class Event extends Component {
                                 })
                             }}>
                                 <View style={{ flexDirection: 'row' }}>
+                                    {unseenApplications > 0 ? 
+                                    <View style = {{position: 'absolute', right: -3*widthPixel, top: -2*widthPixel, height: 10*widthPixel, width: 10*widthPixel, borderRadius: 5*widthPixel, borderWidth: 3*widthPixel, borderColor: "rgb(120,200,255)", backgroundColor: "white", zIndex: 3}}>
+                                    </View> : <View/>
+                                    }
                                     <Icon
                                         name="id-card"
                                         type="font-awesome"
-                                        color="rgb(200,120, 255)"
+                                        color="rgb(200,120,255)"
                                         size={22 * widthPixel}
                                     />
                                 </View>
                             </TouchableOpacity>
-                            <View style={{ width: 35 * widthPixel }} />
+                            <View style={{ width: 40 * widthPixel }} />
                         </View>
                         : <View />
                     }
@@ -278,9 +267,9 @@ export default class Event extends Component {
                         />
                     </TouchableOpacity>
                     {
-                    hosting ? <View style={{ width: 75 * widthPixel }} />
-                        :
-                        <View style={{ width: 120 * widthPixel }} />
+                        hosting ? <View style={{ width: 70 * widthPixel }} />
+                            :
+                            <View style={{ width: 120 * widthPixel }} />
                     }
                     {hosting ?
                         <View style={{ flexDirection: 'row' }}>
@@ -301,7 +290,7 @@ export default class Event extends Component {
                                     size={26.5 * widthPixel}
                                 />
                             </TouchableOpacity>
-                            <View style={{ width: 36.5 * widthPixel }} />
+                            <View style={{ width: 40 * widthPixel }} />
                         </View>
                         : <View />
                     }
@@ -458,7 +447,7 @@ export default class Event extends Component {
                                 width: 0
                             },
                             width: '94%',
-                            backgroundColor: 'white'
+                            backgroundColor: 'white',
                         }}>
                             {
                                 privacySetting === 2 ?
@@ -539,9 +528,9 @@ export default class Event extends Component {
                                 </TouchableWithoutFeedback>
                             </View>
                             <View style={{ height: 5 * heightPixel }} />
-                            <Animated.View style={{ height: this.state.expandedAnim, left: "6%", width: '89%' }}>
+                            <Animated.View style={{ height: this.state.expandedAnim, left: "6%", minWidth: '88%', maxWidth: '88%' }}>
                                 <View onLayout={this._setMaxHeight.bind(this)}>
-                                    <View style={{ height: 7 * heightPixel }} />
+                                    <View style={{ height: 2 * heightPixel }} />
                                     {
                                         this.state.expanded ?
                                             this._renderExpandedDetails(location, description, hosting, eventId, unseenApplications)

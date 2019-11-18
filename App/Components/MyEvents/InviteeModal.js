@@ -236,6 +236,7 @@ export default withNavigation(class InviteeModal extends Component {
                         style={{ width: '100%', height: '100%' }}
                         data={this.state.invitees}
                         extraData={this.state}
+                        keyboardShouldPersistTaps='always'
                         ListFooterComponent={
                             <View style={{ width: '100%', alignItems: 'center' }}>
                                 <View style={{ height: 15 * heightPixel }} />

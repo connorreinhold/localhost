@@ -57,7 +57,7 @@ export default withNavigation(class InviteeEntry extends Component {
                                 <Icon
                                     name="envelope-open"
                                     type="font-awesome"
-                                    color="rgb(130,130,130)"
+                                    color="rgb(210,210,210)"
                                     size={18 * widthPixel}
                                 />
                                 :

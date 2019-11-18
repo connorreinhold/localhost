@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { AsyncStorage, View, Button, Text } from 'react-native'
 import EventListings from './Screens/EventListings.js'
-import { Font } from 'expo';
+import * as Font from 'expo-font';
 import { getRootNavigator } from './AppNavigator.js'
 import { Constants, Location, Permissions, Notifications } from 'expo'
 import getPermission from './Functions/getPermission';
