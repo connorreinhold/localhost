@@ -4,7 +4,9 @@ import {
     Dimensions, TextInput, TouchableWithoutFeedback, TouchableOpacity, Animated
 } from 'react-native'
 import { Icon } from 'react-native-elements'
-import { Constants, Location, Permissions } from 'expo'
+import { Constants} from 'expo'
+import * as Location from 'expo-location'
+import * as Permissions from 'expo-permissions'
 
 import EventDetails from '../Components/EventListings/EventDetails.js'
 import { getTopBarColor } from '../Functions/ColorFuncs.js'
@@ -75,8 +77,10 @@ export default class EventListings extends Component {
                         myLat: global.myLatitude,
                         myLng: global.myLongitude,
                     })
+                }).then(function(response) {
+                    return response.json()
                 }).then(function (response) {
-                    let queryResponse = JSON.parse(response._bodyText);
+                    let queryResponse = response
                     if (queryResponse.isSuccess) {
                         let toParse = queryResponse.value
                         let searchedEvents = this._parseEventJson(toParse)
@@ -99,8 +103,10 @@ export default class EventListings extends Component {
                 email: global.email,
                 userIds: creatorIds
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let myResponse = JSON.parse(response._bodyInit);
+            let myResponse = response;
             if (myResponse.isSuccess) {
                 let updated_events = events
                 for (let i = 0; i < updated_events.length; i++) {
@@ -150,8 +156,10 @@ export default class EventListings extends Component {
                 myLat: global.myLatitude,
                 myLng: global.myLongitude,
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let getEventResponse = JSON.parse(response._bodyText);
+            let getEventResponse = response
             if (getEventResponse.isSuccess) {
                 // false here is for whether the event was an event invited by someone
                 let general_events = this._parseEventJson(getEventResponse.value, false)
@@ -175,8 +183,10 @@ export default class EventListings extends Component {
                     token: global.session_id,
                     email: global.email,
                 })
+            }).then(function(response) {
+                return response.json()
             }).then(function (response) {
-                let getInvitedResponse = JSON.parse(response._bodyText);
+                let getInvitedResponse = response
                 if (getInvitedResponse.isSuccess) {
                     let invited_events = this._parseEventJson(getInvitedResponse.value, true)
                     this._loadGeneralEvents(invited_events)
@@ -200,8 +210,10 @@ export default class EventListings extends Component {
                 email: global.email,
                 eventId: eventId
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let ignoreResponse = JSON.parse(response._bodyInit);
+            let ignoreResponse = response
             if (ignoreResponse.isSuccess) {
                 var new_data = this.state.eventListings.filter(x => {
                     return x.id != eventId;
@@ -271,8 +283,10 @@ export default class EventListings extends Component {
                 email: global.email,
                 eventId: eventId
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let applyResponse = JSON.parse(response._bodyInit);
+            let applyResponse = response
             if (applyResponse.isSuccess) {
                 console.log("EventListings.js - Applied/Joined - " + eventId)
             } else {

@@ -57,8 +57,11 @@ export default class SignUpName extends Component{
                 body: JSON.stringify({
                     email: this.state.email,
                 }),
-            }).then(function(response){
-                let emailResponse = JSON.parse(response._bodyInit);
+            }).then(function(response) {
+                return response.json()
+            })
+            .then(function(response){
+                let emailResponse = response;
                 if(emailResponse.isSuccess){
                     if(emailResponse.value==true){
                         this.setState({

@@ -61,8 +61,11 @@ export default class Login extends Component {
                 email: email,
                 token: token
             })
-        }).then(function (response) {
-            let checkResponse = JSON.parse(response._bodyInit);
+        }).then(function(response) {
+            return response.json()
+        })
+        .then(function (response) {
+            let checkResponse = response;
             if (checkResponse.isSuccess) {
                 let isVerified = checkResponse.value
                 if (isVerified) {
@@ -91,8 +94,11 @@ export default class Login extends Component {
                     email: this.state.username,
                     password: this.state.password
                 }),
-            }).then(function (response) {
-                let loginResponse = JSON.parse(response._bodyInit);
+            }).then(function(response) {
+                return response.json();
+            })
+            .then(function (response) {
+                let loginResponse = response;
                 if (loginResponse.isSuccess) {
                     this._checkVerification(this.state.username, loginResponse.value)
                 } else {

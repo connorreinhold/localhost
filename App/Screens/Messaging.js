@@ -63,7 +63,6 @@ export default class Messaging extends Component {
         global.viewingChatEventId = null
         clearInterval(this.refreshTimer)
         this._isMounted = false
-
     }
 
     _addGuestPictures (guests) {
@@ -78,8 +77,10 @@ export default class Messaging extends Component {
                 email: global.email,
                 userIds: guestIds
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let myResponse = JSON.parse(response._bodyInit);
+            let myResponse = response
             if (myResponse.isSuccess && this._isMounted) {
                 let updated_guests = guests
                 for (let i = 0; i < updated_guests.length; i++) {
@@ -121,8 +122,10 @@ export default class Messaging extends Component {
                 email: global.email,
                 eventId: this.props.navigation.state.params.eventId
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let getAttendeesResponse = JSON.parse(response._bodyText);
+            let getAttendeesResponse = response
             if (getAttendeesResponse.isSuccess && this._isMounted) {
                 let toParse = getAttendeesResponse.value
                 this.setState({
@@ -146,8 +149,10 @@ export default class Messaging extends Component {
                 email: global.email,
                 eventId: this.props.navigation.state.params.eventId,
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let messageResponse = JSON.parse(response._bodyText);
+            let messageResponse = response
             if (messageResponse.isSuccess && this._isMounted) {
                 this.props.navigation.state.params._updateMessagesViewed(this.props.navigation.state.params.eventId)
             }
@@ -167,8 +172,11 @@ export default class Messaging extends Component {
                 messageBody: message[0].text,
                 messageTime: message[0].createdAt
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let messageResponse = JSON.parse(response._bodyText);
+            let messageResponse = response
+            console.log(messageResponse)
             if (messageResponse.isSuccess && this._isMounted) {
                 this.setState({
                     messages: GiftedChat.append(this.state.messages, message),
@@ -231,8 +239,10 @@ export default class Messaging extends Component {
                 email: global.email,
                 eventId: this.props.navigation.state.params.eventId
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let messageResponse = JSON.parse(response._bodyText);
+            let messageResponse = response
             if (messageResponse.isSuccess && this._isMounted) {
                 this._parseMessagesFromJson(messageResponse.value)
                 this._readMessages()
@@ -337,8 +347,10 @@ export default class Messaging extends Component {
                 token: global.session_id,
                 email: global.email,
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let userResponse = JSON.parse(response._bodyText);
+            let userResponse = response
             if (userResponse.isSuccess && this._isMounted) {
                 let myId = userResponse.value._id
                 let guestInfo = this._getGuestFromId(myId)
@@ -349,6 +361,7 @@ export default class Messaging extends Component {
                         avatar: `data:image/gif;base64,${guestInfo.guestPic}`
                     }
                 }, () => {
+                    this._onRefresh()
                     this.refreshTimer = setInterval(this._onRefresh.bind(this), 2000)
                 })
             }

@@ -123,8 +123,10 @@ export default class Profile extends Component {
                 email: global.email,
                 userIds: creatorIds
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let myResponse = JSON.parse(response._bodyInit);
+            let myResponse = response
             if (myResponse.isSuccess) {
                 let updated_events = events
                 for (let i = 0; i < updated_events.length; i++) {
@@ -150,8 +152,10 @@ export default class Profile extends Component {
                 email: global.email,
                 eventIds: pastEvents
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let getEventResponse = JSON.parse(response._bodyText);
+            let getEventResponse = response
             if (getEventResponse.isSuccess) {
                 let pastEvents = getEventResponse.value;
                 let updatedPastEvents = []
@@ -188,8 +192,10 @@ export default class Profile extends Component {
                 email: global.email,
                 userId: userId
             }),
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let profileResponse = JSON.parse(response._bodyInit);
+            let profileResponse = response
             if (profileResponse.isSuccess) {
                 let bio = profileResponse.value.bio
                 let name = profileResponse.value.firstName + " " + profileResponse.value.lastName
@@ -218,8 +224,10 @@ export default class Profile extends Component {
                 email: global.email,
                 userId: userId
             }),
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let profileResponse = JSON.parse(response._bodyInit);
+            let profileResponse = response
             if (profileResponse.isSuccess) {
                 this.setState({
                     source_one: profileResponse.imageData[0],

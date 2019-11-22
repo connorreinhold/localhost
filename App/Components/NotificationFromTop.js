@@ -4,7 +4,9 @@ import {
     Dimensions, Animated
 } from 'react-native'
 import DropdownAlert from 'react-native-dropdownalert';
-import { Constants, Location, Permissions, Notifications } from 'expo'
+import { Constants, Notifications } from 'expo'
+import * as Location from 'expo-location'
+import * as Permissions from 'expo-permissions'
 
 
 const heightPixel = (Dimensions.get('window').height) / (667);

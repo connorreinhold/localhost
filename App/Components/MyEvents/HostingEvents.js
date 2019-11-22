@@ -73,8 +73,10 @@ export default withNavigation(class HostingEvents extends Component {
                 email: global.email,
                 userIds: creatorIds
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let myResponse = JSON.parse(response._bodyInit);
+            let myResponse = response;
             if (myResponse.isSuccess) {
                 let updated_events = events // search bar was removed with events.shift() above
                 for (let i = 0; i < updated_events.length; i++) {
@@ -151,8 +153,10 @@ export default withNavigation(class HostingEvents extends Component {
                 token: global.session_id,
                 email: global.email
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let myEventsResponse = JSON.parse(response._bodyInit);
+            let myEventsResponse = response;
             if (myEventsResponse.isSuccess) {
                 let updatedEvents = []
                 let toParse = myEventsResponse.value;

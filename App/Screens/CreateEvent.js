@@ -86,8 +86,10 @@ export default class CreateEvent extends Component {
                 email: global.email,
                 eventIds: eventIds,
             }),
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let eventResponse = JSON.parse(response._bodyInit);
+            let eventResponse = response
             if (eventResponse.isSuccess) {
                 let event = eventResponse.value[0]
                 let capacity = parseInt(event.capacity)
@@ -122,8 +124,10 @@ export default class CreateEvent extends Component {
                 token: global.session_id,
                 email: global.email,
             }),
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let profileResponse = JSON.parse(response._bodyInit);
+            let profileResponse = response
             if (profileResponse.isSuccess) {
                 this.setState({ myPicture: profileResponse.imageData[0] })
             }
@@ -169,8 +173,10 @@ export default class CreateEvent extends Component {
                 anonymous: this.state.anonymous,
                 privacySetting: this.state.privacySetting
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let createEventResponse = JSON.parse(response._bodyInit);
+            let createEventResponse = response
             if (createEventResponse.isSuccess) {
                 this.props.navigation.state.params._onEventChange()
                 this.props.navigation.goBack(null);

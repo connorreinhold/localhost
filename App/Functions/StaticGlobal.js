@@ -1,5 +1,5 @@
 export default class StaticGlobal{
-    static database_url = "http://localhost:4000"
+    static database_url = "http://10.131.179.222:4000"
 }
  
 // Things that are global (accessed with global.<var>)

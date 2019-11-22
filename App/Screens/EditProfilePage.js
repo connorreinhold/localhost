@@ -19,7 +19,8 @@ import {
 import { Icon } from 'react-native-elements'
 import { getTopBarColor } from '../Functions/ColorFuncs.js'
 import StaticGlobal from '../Functions/StaticGlobal.js'
-import { ImagePicker, Permissions } from 'expo';
+import * as  ImagePicker from 'expo-image-picker';
+import * as Permissions from 'expo-permissions'
 import getPermission from '../Functions/getPermission';
 
 const heightPixel = Dimensions.get('window').height / 667
@@ -184,8 +185,10 @@ export default class EditProfilePage extends Component {
                     'Content-Type': 'multipart/form-data',
                 },
                 body: data
+            }).then(function(response) {
+                return response.json()
             }).then(function (response) {
-                let uploadPictureResponse = JSON.parse(response._bodyText)
+                let uploadPictureResponse = response
                 if (!uploadPictureResponse.isSuccess) {
                     console.log("Upload picture failed")
                 }

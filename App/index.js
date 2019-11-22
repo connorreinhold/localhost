@@ -3,7 +3,9 @@ import { AsyncStorage, View, Button, Text } from 'react-native'
 import EventListings from './Screens/EventListings.js'
 import * as Font from 'expo-font';
 import { getRootNavigator } from './AppNavigator.js'
-import { Constants, Location, Permissions, Notifications } from 'expo'
+import { Constants, Notifications } from 'expo'
+import * as Location from 'expo-location'
+import * as Permissions from 'expo-permissions'
 import getPermission from './Functions/getPermission';
 import StaticGlobal from './Functions/StaticGlobal'
 import NotificationFromTop from './Components/NotificationFromTop'
@@ -75,7 +77,6 @@ class main extends Component {
             Permissions.NOTIFICATIONS
         );
         let finalStatus = existingStatus;
-
         // only ask if permissions have not already been determined, because
         // iOS won't necessarily prompt the user a second time.
         if (existingStatus !== 'granted') {
@@ -106,8 +107,10 @@ class main extends Component {
                 token: global.session_id,
                 pushToken: pushToken
             }),
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let updateTokenResponse = JSON.parse(response._bodyInit);
+            let updateTokenResponse = response;
             this.updatedData = true
         }.bind(this));
     }

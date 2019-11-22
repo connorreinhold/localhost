@@ -23,6 +23,13 @@ export default class UnverifiedAccount extends Component {
         }
         this.secondPass = null
     }
+    componentDidMount() {
+        this.timer = setInterval(()=> this._onRefresh(), 1000)
+    }
+
+    componentWillUnmount () {
+        clearInterval(this.timer)
+    }
 
     _resendConfirmationEmail () {
         if (!this.state.isSending) {
@@ -38,8 +45,10 @@ export default class UnverifiedAccount extends Component {
                     email: email,
                     hostLink: StaticGlobal.database_url
                 })
+            }).then(function(response) {
+                return response.json()
             }).then(function (response) {
-                let confirmationResponse = JSON.parse(response._bodyInit);
+                let confirmationResponse = response
                 if (confirmationResponse.isSuccess) {
                     this.setState({
                         confirmationSent: true,
@@ -51,6 +60,7 @@ export default class UnverifiedAccount extends Component {
     }
 
     _onRefresh () {
+        console.log("Called")
         fetch(StaticGlobal.database_url + '/checkEmailConfirmed', {
             method: 'POST',
             headers: {
@@ -60,8 +70,10 @@ export default class UnverifiedAccount extends Component {
                 email: global.email,
                 token: global.session_id
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let checkResponse = JSON.parse(response._bodyInit);
+            let checkResponse = response
             if (checkResponse.isSuccess) {
                 let isVerified = checkResponse.value
                 if (isVerified) {

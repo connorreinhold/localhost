@@ -51,8 +51,10 @@ export default class GuestList extends Component {
                 email: global.email,
                 eventId: this.props.navigation.state.params.eventId
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let readResponse = JSON.parse(response._bodyText)
+            let readResponse = response
             if (readResponse.isSuccess) {
                 this.props.navigation.state.params._updateApplicationsViewed(this.props.navigation.state.params.eventId)
             }
@@ -84,8 +86,10 @@ export default class GuestList extends Component {
                     email: global.email,
                     eventId: this.props.navigation.state.params.eventId
                 })
+            }).then(function(response) {
+                return response.json()
             }).then(function (response) {
-                let acceptApplicantResponse = JSON.parse(response._bodyText)
+                let acceptApplicantResponse = response
                 if (acceptApplicantResponse.isSuccess) {
                     console.log("Successfully accepted applicant " + applicantId)
                     let updated_applications = []
@@ -116,8 +120,10 @@ export default class GuestList extends Component {
                 email: global.email,
                 eventId: this.props.navigation.state.params.eventId
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let removeApplicantResponse = JSON.parse(response._bodyText)
+            let removeApplicantResponse = response
             if (removeApplicantResponse.isSuccess) {
                 console.log("Successfully rejected applicant " + applicantId)
                 let updated_applications = []
@@ -158,8 +164,10 @@ export default class GuestList extends Component {
                 email: global.email,
                 userIds: applicantIds
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let myResponse = JSON.parse(response._bodyInit);
+            let myResponse = response
             if (myResponse.isSuccess) {
                 let updated_applications = applications
                 for (let i = 0; i < updated_applications.length; i++) {
@@ -184,8 +192,10 @@ export default class GuestList extends Component {
                 email: global.email,
                 eventId: this.props.navigation.state.params.eventId
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let getApplicantsResponse = JSON.parse(response._bodyText);
+            let getApplicantsResponse = response
             if (getApplicantsResponse.isSuccess) {
                 let toParse = getApplicantsResponse.value
                 this.setState({

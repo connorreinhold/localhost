@@ -16,7 +16,6 @@ export default class Event extends Component {
     constructor (props) {
         super(props)
         this.state = {
-            expandedAnim: new Animated.Value(),
             largerExpandedHeight: 999,
             nonExpandedHeight: 9999,
             expanded: true,
@@ -25,7 +24,10 @@ export default class Event extends Component {
             deleteBoxOpacity: new Animated.Value(0),
             fadeAnim: new Animated.Value(1),
             heightAnim: new Animated.Value(),
+            expandedAnim: new Animated.Value(),
             spinAnim: new Animated.Value(0),
+            initializedExpandedAnim: false,
+            initializedHeightAnim: false,
         }
     }
 
@@ -43,6 +45,7 @@ export default class Event extends Component {
                 }, () => {
                     this.state.expandedAnim.setValue(0)
                     this.setState({
+                        initializedExpandedAnim: true,
                         expanded: false,
                     })
 
@@ -108,7 +111,7 @@ export default class Event extends Component {
                 }
                 )
             }
-        }
+        } 
     }
     _renderMessageNotification (unseenMessages) {
         if (unseenMessages > 0) {
@@ -134,14 +137,18 @@ export default class Event extends Component {
                 duration: 300
             }).start(() => {
                 this.state.heightAnim.setValue(this.state.largerExpandedHeight + this.state.nonExpandedHeight)
-                Animated.timing(
-                    this.state.heightAnim,
-                    {
-                        toValue: 0,
-                        duration: 300
-                    }
-                ).start(() => {
-                    _removeEventUI(eventId)
+                this.setState({
+                    initializedHeightAnim: true
+                }, ()=> {
+                    Animated.timing(
+                        this.state.heightAnim,
+                        {
+                            toValue: 0,
+                            duration: 300
+                        }
+                    ).start(() => {
+                        _removeEventUI(eventId)
+                    })
                 })
             })
     }
@@ -157,8 +164,11 @@ export default class Event extends Component {
                 email: global.email,
                 eventId: eventId
             })
-        }).then(function (response) {
-            let deleteResponse = JSON.parse(response._bodyInit);
+        }).then(function(response) {
+            return response.json();
+        })
+        .then(function (response) {
+            let deleteResponse = response;
             if (deleteResponse.isSuccess) {
                 this._executeRemoveAnimation(_removeEventUI, eventId)
             }
@@ -176,8 +186,10 @@ export default class Event extends Component {
                 email: global.email,
                 eventId: eventId
             })
+        }).then(function(response) {
+            return response.json();
         }).then(function (response) {
-            let leaveResponse = JSON.parse(response._bodyInit);
+            let leaveResponse = response;
             if (leaveResponse.isSuccess) {
                 this._executeRemoveAnimation(_removeEventUI, eventId)
             }
@@ -326,7 +338,7 @@ export default class Event extends Component {
         let shouldShowOpacity = this.state.nonExpandedHeight === 9999 ? 0 : 1
         return (
             <View style={{ width: '100%', alignItems: 'center', opacity: shouldShowOpacity }}>
-                <Animated.View onLayout={this._setNonExpandedHeight.bind(this)} style={{ opacity: this.state.fadeAnim, height: this.state.heightAnim }}>
+                <Animated.View onLayout={this._setNonExpandedHeight.bind(this)} style={[{opacity: this.state.fadeAnim}, this.state.initializedHeightAnim ? {height: this.state.heightAnim} : {}]}>
                     {this.state.showConfirmDelete ?
                         // This part is the confirmation delete part that pops up in the same place
                         <Animated.View style={{
@@ -528,7 +540,8 @@ export default class Event extends Component {
                                 </TouchableWithoutFeedback>
                             </View>
                             <View style={{ height: 5 * heightPixel }} />
-                            <Animated.View style={{ height: this.state.expandedAnim, left: "6%", minWidth: '88%', maxWidth: '88%' }}>
+                            <Animated.View style={[{left: "6%", minWidth: '88%', maxWidth: '88%' },
+                            this.state.initializedExpandedAnim ? {height: this.state.expandedAnim} : {}]}>
                                 <View onLayout={this._setMaxHeight.bind(this)}>
                                     <View style={{ height: 2 * heightPixel }} />
                                     {

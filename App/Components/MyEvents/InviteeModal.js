@@ -38,8 +38,10 @@ export default withNavigation(class InviteeModal extends Component {
                 email: global.email,
                 userIds: inviteeIds
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let myResponse = JSON.parse(response._bodyInit);
+            let myResponse = response;
             if (myResponse.isSuccess) {
                 let updated_invitees = invitees
                 for (let i = 0; i < updated_invitees.length; i++) {
@@ -80,8 +82,10 @@ export default withNavigation(class InviteeModal extends Component {
                 email: global.email,
                 eventId: this.props.eventId
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let queryResponse = JSON.parse(response._bodyText);
+            let queryResponse = response;
             if (queryResponse.isSuccess) {
                 let idGuests = (queryResponse.value).map((guest) => { return guest._id })
                 for (let i = 0; i < possiblePeople.length; i++) {
@@ -105,8 +109,10 @@ export default withNavigation(class InviteeModal extends Component {
                 email: global.email,
                 eventId: this.props.eventId
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let queryResponse = JSON.parse(response._bodyText);
+            let queryResponse = response;
             if (queryResponse.isSuccess) {
                 let idInvitees = queryResponse.value
                 for (let i = 0; i < possiblePeople.length; i++) {
@@ -138,8 +144,10 @@ export default withNavigation(class InviteeModal extends Component {
                         email: global.email,
                         query: text,
                     })
+                }).then(function(response) {
+                    return response.json()
                 }).then(function (response) {
-                    let queryResponse = JSON.parse(response._bodyText);
+                    let queryResponse = response;
                     if (queryResponse.isSuccess) {
                         let toParse = queryResponse.value
                         if (queryResponse.query === this.state.searchQuery) {
@@ -164,8 +172,10 @@ export default withNavigation(class InviteeModal extends Component {
                 eventId: this.props.eventId,
                 userId: userId,
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let inviteResponse = JSON.parse(response._bodyText);
+            let inviteResponse = response;
             if (inviteResponse.isSuccess) {
                 let to_update = this.state.invitees
                 for (let i = 0; i < to_update.length; i++) {

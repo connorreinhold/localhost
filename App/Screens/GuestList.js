@@ -57,8 +57,10 @@ export default class GuestList extends Component {
                 email: global.email,
                 userIds: guestIds
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let myResponse = JSON.parse(response._bodyInit);
+            let myResponse = response
             if (myResponse.isSuccess) {
                 let updated_guests = guests
                 for (let i = 0; i < updated_guests.length; i++) {
@@ -87,8 +89,10 @@ export default class GuestList extends Component {
                 email: global.email,
                 eventId: this.props.navigation.state.params.eventId
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let getAttendeesResponse = JSON.parse(response._bodyText);
+            let getAttendeesResponse = response
             if (getAttendeesResponse.isSuccess) {
                 let toParse = getAttendeesResponse.value
                 this._addGuestPictures(this._guestsFromJson(toParse))

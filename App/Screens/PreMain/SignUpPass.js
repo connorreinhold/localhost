@@ -67,8 +67,10 @@ export default class SignUpName extends Component {
                 email: email,
                 password: password
             })
+        }).then(function(response) {
+            return response.json()
         }).then(function (response) {
-            let passwordResponse = JSON.parse(response._bodyInit);
+            let passwordResponse = response
             if (passwordResponse.isSuccess) {
                 global.session_id = passwordResponse.value
                 global.email = email
@@ -82,8 +84,10 @@ export default class SignUpName extends Component {
                         email: email,
                         hostLink: StaticGlobal.database_url
                     })
+                }).then(function(response) {
+                    return response.json()
                 }).then(function (response) {
-                    let confirmationResponse = JSON.parse(response._bodyInit);
+                    let confirmationResponse = response
                     if (confirmationResponse.isSuccess) {
                     }
                 }.bind(this));
