@@ -1,23 +1,24 @@
 import React, { PureComponent } from 'react'
-import { Text, View, Image, StyleSheet,TouchableWithoutFeedback, Animated, Dimensions } from 'react-native'
-import {Calculate, dimCalculate} from '../../Functions/ColorFuncs.js'
+import { Text, View, Image, StyleSheet, TouchableWithoutFeedback, Animated, Dimensions } from 'react-native'
+import { Calculate, dimCalculate } from '../../Functions/ColorFuncs.js'
 import { Icon } from 'react-native-elements'
 import CircleBar from '../CircleBar.js'
+import { _getAnonAvatar } from '../../Functions/AvatarGen.js'
 
 const heightPixel = (Dimensions.get('window').height) / (667);
 const widthPixel = (Dimensions.get('window').width) / 375;
 const borderRadius = 10 * widthPixel
 
 export default function _renderCard (
-    description, title, time, 
-    guests, maxPeople, hostPic, 
-    hostId, invited, eventId, 
-    anonymous, privacySetting, lockPressPic, 
+    description, title, time,
+    guests, maxPeople, hostPic,
+    hostId, invited, eventId,
+    anonymous, privacySetting, lockPressPic,
     _expandCard, _setExpandedRegionHeight,
-    circleSpinValue, spinValue,  
+    circleSpinValue, spinValue,
     initializedExpandedAnim,
-    expandedAnim, 
-    expanded, 
+    expandedAnim,
+    expanded,
     navigation) {
     return (
         <View style={{
@@ -64,51 +65,36 @@ export default function _renderCard (
                             : <View />
                     }
                     <View style={{ top: -2 * heightPixel }}>
-                        <View style={{ flexDirection: 'row', borderColor: dimCalculate(guests.length, maxPeople)}}>
+                        <View style={{ flexDirection: 'row', borderColor: dimCalculate(guests.length, maxPeople) }}>
                             <View style={{ width: 10 * widthPixel }} />
-                            {
-                                !lockPressPic ?
-                                    <TouchableWithoutFeedback onPress={() => {
-                                        if (!anonymous) {
-                                            navigation.navigate({
-                                                routeName: 'Profile',
-                                                params: { userId: hostId },
-                                                key: Math.random() * 10000,
-                                                // key allows react-native to differentiate between different instances of the same route
-                                            })
-                                        }
-                                    }}>
-                                        {hostPic == "" ?
-                                            <View style={styles.hostPic} />
-                                            :
-                                            invited ?
-                                                <Image
-                                                    style={[styles.hostPic, { borderWidth: 3 * widthPixel, borderColor: 'rgb(255,223,0)' }]}
-                                                    source={{ uri: `data:image/gif;base64,${hostPic}` }}
-                                                />
-                                                :
-                                                <Image
-                                                    style={styles.hostPic}
-                                                    source={{ uri: `data:image/gif;base64,${hostPic}` }}
-                                                />
-                                        }
-                                    </TouchableWithoutFeedback>
+                            <TouchableWithoutFeedback onPress={() => {
+                                if (!anonymous && !lockPressPic) {
+                                    navigation.navigate({
+                                        routeName: 'Profile',
+                                        params: { userId: hostId },
+                                        key: Math.random() * 10000,
+                                        // key allows react-native to differentiate between different instances of the same route
+                                    })
+                                }
+                            }}>
+                                {!hostPic ?
+                                    <Image
+                                        style={styles.hostPic}
+                                        source={_getAnonAvatar(title)}
+                                    />
                                     :
-                                    hostPic == "" ?
-                                        <View style={styles.hostPic} />
+                                    invited ?
+                                        <Image
+                                            style={[styles.hostPic, { borderWidth: 3 * widthPixel, borderColor: 'rgb(255,223,0)' }]}
+                                            source={{ uri: `data:image/gif;base64,${hostPic}` }}
+                                        />
                                         :
-                                        invited ?
-                                            <Image
-                                                style={[styles.hostPic, { borderWidth: 3 * widthPixel, borderColor: 'rgb(255,223,0)' }]}
-                                                source={{ uri: `data:image/gif;base64,${hostPic}` }}
-                                            />
-                                            :
-                                            <Image
-                                                style={styles.hostPic}
-                                                source={{ uri: `data:image/gif;base64,${hostPic}` }}
-                                            />
-
-                            }
+                                        <Image
+                                            style={styles.hostPic}
+                                            source={{ uri: `data:image/gif;base64,${hostPic}` }}
+                                        />
+                                }
+                            </TouchableWithoutFeedback>
                             <View style={{ left: 13 * widthPixel, justifyContent: 'center', minWidth: 200 * widthPixel, maxWidth: 200 * widthPixel }}>
                                 <View style={{ flexDirection: 'column' }}>
                                     <Text style={styles.titleFont}>

@@ -176,7 +176,6 @@ export default class Messaging extends Component {
             return response.json()
         }).then(function (response) {
             let messageResponse = response
-            console.log(messageResponse)
             if (messageResponse.isSuccess && this._isMounted) {
                 this.setState({
                     messages: GiftedChat.append(this.state.messages, message),

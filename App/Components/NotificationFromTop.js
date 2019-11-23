@@ -4,7 +4,8 @@ import {
     Dimensions, Animated
 } from 'react-native'
 import DropdownAlert from 'react-native-dropdownalert';
-import { Constants, Notifications } from 'expo'
+import * as Constants from 'expo-constants'
+import {Notifications } from 'expo'
 import * as Location from 'expo-location'
 import * as Permissions from 'expo-permissions'
 

@@ -1,5 +1,5 @@
 export default class StaticGlobal{
-    static database_url = "http://10.131.179.222:4000"
+    static database_url = "http://10.129.0.47:4000"
 }
  
 // Things that are global (accessed with global.<var>)
@@ -10,3 +10,4 @@ export default class StaticGlobal{
 // global.viewingChatEventId - null if not viewing a chat, 
 // the eventId of the message chat if it is currently open
 // global._setLoggedIn - method to control whether the user is logged in or not (takes a boolean)
+// global.name - name of the user (needed for calculating anonymous views)

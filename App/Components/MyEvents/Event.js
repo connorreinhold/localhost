@@ -5,6 +5,8 @@ import CircleBar from '../CircleBar.js'
 import { getTopBarColor, dimCalculate, Calculate } from '../../Functions/ColorFuncs.js';
 import StaticGlobal from '../../Functions/StaticGlobal.js';
 
+import { _getAvatar, _getAnonAvatar } from '../../Functions/AvatarGen'
+
 
 const heightPixel = (Dimensions.get('window').height) / (667);
 const widthPixel = (Dimensions.get('window').width) / 375;
@@ -111,7 +113,7 @@ export default class Event extends Component {
                 }
                 )
             }
-        } 
+        }
     }
     _renderMessageNotification (unseenMessages) {
         if (unseenMessages > 0) {
@@ -139,7 +141,7 @@ export default class Event extends Component {
                 this.state.heightAnim.setValue(this.state.largerExpandedHeight + this.state.nonExpandedHeight)
                 this.setState({
                     initializedHeightAnim: true
-                }, ()=> {
+                }, () => {
                     Animated.timing(
                         this.state.heightAnim,
                         {
@@ -164,15 +166,15 @@ export default class Event extends Component {
                 email: global.email,
                 eventId: eventId
             })
-        }).then(function(response) {
+        }).then(function (response) {
             return response.json();
         })
-        .then(function (response) {
-            let deleteResponse = response;
-            if (deleteResponse.isSuccess) {
-                this._executeRemoveAnimation(_removeEventUI, eventId)
-            }
-        }.bind(this));
+            .then(function (response) {
+                let deleteResponse = response;
+                if (deleteResponse.isSuccess) {
+                    this._executeRemoveAnimation(_removeEventUI, eventId)
+                }
+            }.bind(this));
     }
 
     _leaveEvent (eventId, _removeEventUI) {
@@ -186,7 +188,7 @@ export default class Event extends Component {
                 email: global.email,
                 eventId: eventId
             })
-        }).then(function(response) {
+        }).then(function (response) {
             return response.json();
         }).then(function (response) {
             let leaveResponse = response;
@@ -228,7 +230,7 @@ export default class Event extends Component {
                     {location}
                 </Text>
                 {description.length > 0 ?
-                    <View style={{ width: '100%'}}>
+                    <View style={{ width: '100%' }}>
                         <View style={{ height: 15 * heightPixel }} />
                         <Text style={styles.descriptionFont}>
                             {description}
@@ -241,7 +243,7 @@ export default class Event extends Component {
                         <View style={{ flexDirection: 'row' }}>
                             <TouchableOpacity onPress={() => {
                                 this.props.navigation.navigate({
-                                    routeName: 'Applications', 
+                                    routeName: 'Applications',
                                     params: {
                                         _updateApplicationsViewed: this.props._updateApplicationsViewed,
                                         _onEventChange: this.props._onEventChange,
@@ -252,9 +254,9 @@ export default class Event extends Component {
                                 })
                             }}>
                                 <View style={{ flexDirection: 'row' }}>
-                                    {unseenApplications > 0 ? 
-                                    <View style = {{position: 'absolute', right: -3*widthPixel, top: -2*widthPixel, height: 10*widthPixel, width: 10*widthPixel, borderRadius: 5*widthPixel, borderWidth: 3*widthPixel, borderColor: "rgb(120,200,255)", backgroundColor: "white", zIndex: 3}}>
-                                    </View> : <View/>
+                                    {unseenApplications > 0 ?
+                                        <View style={{ position: 'absolute', right: -3 * widthPixel, top: -2 * widthPixel, height: 10 * widthPixel, width: 10 * widthPixel, borderRadius: 5 * widthPixel, borderWidth: 3 * widthPixel, borderColor: "rgb(120,200,255)", backgroundColor: "white", zIndex: 3 }}>
+                                        </View> : <View />
                                     }
                                     <Icon
                                         name="id-card"
@@ -329,6 +331,7 @@ export default class Event extends Component {
         let anonymous = this.props.anonymous
         let hostPic = this.props.hostPic;
         let location = this.props.location
+        let hostName = this.props.hostName
         let unseenMessages = this.props.unseenMessages
         let unseenApplications = this.props.unseenApplications
         let eventId = this.props.eventId
@@ -338,7 +341,7 @@ export default class Event extends Component {
         let shouldShowOpacity = this.state.nonExpandedHeight === 9999 ? 0 : 1
         return (
             <View style={{ width: '100%', alignItems: 'center', opacity: shouldShowOpacity }}>
-                <Animated.View onLayout={this._setNonExpandedHeight.bind(this)} style={[{opacity: this.state.fadeAnim}, this.state.initializedHeightAnim ? {height: this.state.heightAnim} : {}]}>
+                <Animated.View onLayout={this._setNonExpandedHeight.bind(this)} style={[{ opacity: this.state.fadeAnim }, this.state.initializedHeightAnim ? { height: this.state.heightAnim } : {}]}>
                     {this.state.showConfirmDelete ?
                         // This part is the confirmation delete part that pops up in the same place
                         <Animated.View style={{
@@ -502,14 +505,15 @@ export default class Event extends Component {
                                         })
                                     }
                                 }}>
-                                    {hostPic == "" ?
-                                        <View style={styles.hostPic} />
-                                        :
-                                        <Image
-                                            style={styles.hostPic}
-                                            source={{ uri: `data:image/gif;base64,${hostPic}` }}
-                                        />
-                                    }
+                                    <Image
+                                        style={styles.hostPic}
+                                        source={
+                                            anonymous ? _getAnonAvatar(title)
+                                                :
+                                                hostPic.length === 0 ? _getAvatar(hostName, 1) :
+                                                    { uri: `data:image/gif;base64,${hostPic}` }}
+                                    />
+
                                 </TouchableWithoutFeedback>
                                 <View style={{ flex: 1, justifyContent: 'center', left: 10 * widthPixel, width: component_width - 2 * circle_radius }}>
                                     <Text style={styles.titleFont}>
@@ -540,8 +544,8 @@ export default class Event extends Component {
                                 </TouchableWithoutFeedback>
                             </View>
                             <View style={{ height: 5 * heightPixel }} />
-                            <Animated.View style={[{left: "6%", minWidth: '88%', maxWidth: '88%' },
-                            this.state.initializedExpandedAnim ? {height: this.state.expandedAnim} : {}]}>
+                            <Animated.View style={[{ left: "6%", minWidth: '88%', maxWidth: '88%' },
+                            this.state.initializedExpandedAnim ? { height: this.state.expandedAnim } : {}]}>
                                 <View onLayout={this._setMaxHeight.bind(this)}>
                                     <View style={{ height: 2 * heightPixel }} />
                                     {

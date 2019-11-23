@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { View, Image, Text, Dimensions, StyleSheet, TouchableWithoutFeedback} from 'react-native'
+import { View, Image, Text, Dimensions, StyleSheet, TouchableWithoutFeedback } from 'react-native'
 
+import { _getAvatar } from '../../Functions/AvatarGen'
 
 const widthPixel = Dimensions.get('window').width / 375
 const heightPixel = Dimensions.get('window').height / 667
@@ -18,25 +19,21 @@ export default class GuestEntry extends Component {
         let guestName = this.props.guestName
         let guestId = this.props.guestId
         return (
-            <View style={{ height: 2*verticalMargins+guestPicSize}}>
+            <View style={{ height: 2 * verticalMargins + guestPicSize }}>
                 <View style={styles.topArea} />
                 <View style={{ flexDirection: 'row' }}>
-                    {guestPic == "" ?
-                        <View style={styles.guestPic} />
-                        :
-                        <TouchableWithoutFeedback onPress={() =>
-                            this.props.navigation.navigate({
-                                routeName: 'Profile',
-                                params: { userId: guestId },
-                                key: Math.random() * 10000,
-                                // key allows react-native to differentiate between different instances of the same route
-                            })} >
-                            <Image
-                                style={styles.guestPic}
-                                source={{ uri: `data:image/gif;base64,${guestPic}` }}
-                            />
-                        </TouchableWithoutFeedback>
-                }
+                    <TouchableWithoutFeedback onPress={() =>
+                        this.props.navigation.navigate({
+                            routeName: 'Profile',
+                            params: { userId: guestId },
+                            key: Math.random() * 10000,
+                            // key allows react-native to differentiate between different instances of the same route
+                        })} >
+                        <Image
+                            style={styles.guestPic}
+                            source={guestPic && guestPic.length > 0 ? { uri: `data:image/gif;base64,${guestPic}` } : _getAvatar(guestName, 1)}
+                        />
+                    </TouchableWithoutFeedback>
                     <View style={{ width: innerSpace }} />
                     <View style={{ width: middleArea, height: '100%', justifyContent: 'center' }}>
                         <Text style={styles.nameFont}>

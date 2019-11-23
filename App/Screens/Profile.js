@@ -83,12 +83,13 @@ export default class Profile extends Component {
         this.state = {
             isFetching1: true,
             isFetching2: true,
+            loadedPics: false,
             userId: "",
             source_one: "",
             source_two: "",
             source_three: "",
             source_four: "",
-            profile_name: "",
+            profile_name: global.profile_name,
             bio: "",
             college: "Cornell",
             join_date: "",
@@ -107,6 +108,7 @@ export default class Profile extends Component {
                 source_three: this.state.source_three,
                 source_four: this.state.source_four,
                 bio: this.state.bio,
+                profile_name: this.state.profile_name,
                 _informationUpdated: this._informationUpdated
             })
     }
@@ -235,6 +237,7 @@ export default class Profile extends Component {
                     source_three: profileResponse.imageData[2],
                     source_four: profileResponse.imageData[3],
                     isFetching1: false,
+                    loadedPics: true,
                 })
             }
         }.bind(this));
@@ -290,6 +293,8 @@ export default class Profile extends Component {
                                 source_two={this.state.source_two}
                                 source_three={this.state.source_three}
                                 source_four={this.state.source_four}
+                                profile_name = {this.state.profile_name}
+                                loadedPics = {this.state.loadedPics}
                             />
                             <View style={{ height: 18.5 * heightPixel }} />
                             <View style={{ justifyContent: 'center', alignItems: 'center' }}>

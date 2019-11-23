@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { View, Image, Text, Dimensions, StyleSheet, TouchableWithoutFeedback, TouchableOpacity, } from 'react-native'
+import { View, Image, Text, Dimensions, StyleSheet, TouchableWithoutFeedback, TouchableOpacity} from 'react-native'
 import { getTopBarColor } from '../../Functions/ColorFuncs';
+import {_getAvatar} from '../../Functions/AvatarGen'
 import { withNavigation } from 'react-navigation';
 import { Icon } from 'react-native-elements'
 
@@ -41,7 +42,7 @@ export default withNavigation(class InviteeEntry extends Component {
                         }} >
                             <Image
                                 style={styles.inviteePic}
-                                source={{ uri: `data:image/gif;base64,${inviteePic}` }}
+                                source={inviteePic && inviteePic.length > 0 ? { uri: `data:image/gif;base64,${inviteePic}` } : _getAvatar(inviteeName, 1)}
                             />
                         </TouchableWithoutFeedback>
                     }

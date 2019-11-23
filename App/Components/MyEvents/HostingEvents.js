@@ -45,6 +45,7 @@ export default withNavigation(class HostingEvents extends Component {
                 creator: toParse[i].creator,
                 location: toParse[i].location,
                 hostPic: "",
+                hostName: global.profile_name, // host name is used if it is a non-anonymous event with a person who hasn't set their profile picture
                 unseenMessages: toParse[i].unseenMessages, 
                 unseenApplications: toParse[i].unseenApplications, 
                 time: parseDate(toParse[i].time),
@@ -81,12 +82,17 @@ export default withNavigation(class HostingEvents extends Component {
                 let updated_events = events // search bar was removed with events.shift() above
                 for (let i = 0; i < updated_events.length; i++) {
                     let hostIndex = myResponse.imageOrder.indexOf(updated_events[i].creator)
-                    updated_events[i].hostPic = myResponse.imageData[hostIndex]
+                    if (myResponse.imageData[hostIndex]) {
+                        updated_events[i].hostPic = myResponse.imageData[hostIndex]
+                    }
                 }
                 this.setState({
                     events: updated_events,
                     isFetching: false,
                 })
+            }
+            else {
+                // ERROR MESSAGE
             }
         }.bind(this))
     }
@@ -225,6 +231,7 @@ export default withNavigation(class HostingEvents extends Component {
                                 creator={item.creator}
                                 hosting={true}
                                 hostPic={item.hostPic}
+                                hostName = {item.hostName}
                                 unseenApplications = {item.unseenApplications}
                                 time={item.time}
                                 unseenMessages={item.unseenMessages}

@@ -61,6 +61,7 @@ export default class Settings extends Component {
                 source_three: this.props.navigation.state.params.source_three,
                 source_four: this.props.navigation.state.params.source_four,
                 bio: this.props.navigation.state.params.bio,
+                profile_name: this.props.navigation.state.params.profile_name,
                 _informationUpdated: this.props.navigation.state.params._informationUpdated
 
             })

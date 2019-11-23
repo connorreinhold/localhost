@@ -3,7 +3,8 @@ import { AsyncStorage, View, Button, Text } from 'react-native'
 import EventListings from './Screens/EventListings.js'
 import * as Font from 'expo-font';
 import { getRootNavigator } from './AppNavigator.js'
-import { Constants, Notifications } from 'expo'
+import { Notifications } from 'expo'
+import * as Constants from 'expo-constants'
 import * as Location from 'expo-location'
 import * as Permissions from 'expo-permissions'
 import getPermission from './Functions/getPermission';
@@ -12,6 +13,10 @@ import NotificationFromTop from './Components/NotificationFromTop'
 
 class main extends Component {
     async componentDidMount () {
+        // THIS IS HERE NOW CUZ OF ANDROID
+        await Font.loadAsync({
+            'Avenir': require('../assets/fonts/Montserrat-Medium.ttf'),
+        })
         await Font.loadAsync({
             'Montserrat': require('../assets/fonts/Montserrat-Medium.ttf'),
         })
@@ -91,11 +96,12 @@ class main extends Component {
             this._updateToken("")
             return;
         }
-
+        
         // Get the token that uniquely identifies this device
         let pushToken = await Notifications.getExpoPushTokenAsync();
         this._updateToken(pushToken)
     };
+
     _updateToken (pushToken) {
         fetch(StaticGlobal.database_url + '/pushToken', {
             method: 'POST',

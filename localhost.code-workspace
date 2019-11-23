@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "/Users/connorreinhold/Documents/localhostBE"
+		}
+	],
+    "settings": {
+        "git.ignoreLimitWarning": true
+    }
+}

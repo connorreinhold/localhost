@@ -4,13 +4,14 @@ import {
     Dimensions, TextInput, TouchableWithoutFeedback, TouchableOpacity, Animated
 } from 'react-native'
 import { Icon } from 'react-native-elements'
-import { Constants} from 'expo'
+import * as Constants from 'expo-constants'
 import * as Location from 'expo-location'
 import * as Permissions from 'expo-permissions'
 
 import EventDetails from '../Components/EventListings/EventDetails.js'
 import { getTopBarColor } from '../Functions/ColorFuncs.js'
 import StaticGlobal from '../Functions/StaticGlobal.js'
+import {_retrieveProfileName} from '../Functions/GlobalNetwork.js'
 import { parseDate } from '../Functions/TimeFuncs.js'
 
 const heightPixel = (Dimensions.get('window').height) / (667);
@@ -52,10 +53,11 @@ export default class EventListings extends Component {
     }
 
     componentDidMount () {
-        if (Platform.OS === 'android' && !Constants.isDevice) {
+        if (false && Platform.OS === 'android' && !Constants.isDevice) {
             console.log('Oops, this will not work on Sketch in an Android emulator. Try it on your device!')
         } else {
             this._onRefresh();
+            _retrieveProfileName();
         }
     }
 
@@ -111,7 +113,7 @@ export default class EventListings extends Component {
                 let updated_events = events
                 for (let i = 0; i < updated_events.length; i++) {
                     let hostIndex = myResponse.imageOrder.indexOf(updated_events[i].hostId)
-                    updated_events[i].hostPic = myResponse.imageData[hostIndex]
+                    updated_events[i].hostPic = myResponse.imageData[hostIndex]   
                 }
                 this.setState({
                     eventListings: updated_events,

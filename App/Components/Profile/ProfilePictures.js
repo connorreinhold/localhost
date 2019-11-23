@@ -7,6 +7,8 @@ import {
     Animated
 } from 'react-native'
 
+import { _getAvatar } from '../../Functions/AvatarGen'
+
 
 const heightPixel = (Dimensions.get('window').height) / (667);
 const widthPixel = (Dimensions.get('window').width) / (375);
@@ -121,20 +123,20 @@ export default class ProfilePictures extends Component {
         top_distance_one = larger_pic_size + center_margin - side_pics_down
         topOutputRange = [
             side_pics_down,
-            side_pics_down + top_distance_one / 2, 
-            side_pics_down + 3 * top_distance_one / 4, 
+            side_pics_down + top_distance_one / 2,
+            side_pics_down + 3 * top_distance_one / 4,
             side_pics_down + 7 * top_distance_one / 8,
-            larger_pic_size + center_margin, 
-            side_pics_down + top_distance_one / 2, 
-            side_pics_down + (top_distance_one) / 4, 
+            larger_pic_size + center_margin,
+            side_pics_down + top_distance_one / 2,
+            side_pics_down + (top_distance_one) / 4,
             side_pics_down + (top_distance_one) / 8,
-            side_pics_down, 
-            side_pics_down / 2, 
-            side_pics_down / 4, 
+            side_pics_down,
+            side_pics_down / 2,
+            side_pics_down / 4,
             side_pics_down / 8,
-            0, 
-            side_pics_down / 4, 
-            2 * side_pics_down / 4, 
+            0,
+            side_pics_down / 4,
+            2 * side_pics_down / 4,
             3 * side_pics_down / 4,
             side_pics_down
         ]
@@ -143,266 +145,176 @@ export default class ProfilePictures extends Component {
         left_distance_two = medium_pic_size + 2 * horizontal_margin + larger_pic_size - left_distance_one
         left_distance_three = left_margin + left_distance_one + left_distance_two - (left_margin + medium_pic_size + horizontal_margin)
         leftOutputRange = [
-            left_margin, 
-            left_margin + left_distance_one / 2, 
-            left_margin + 3 * left_distance_one / 4, 
+            left_margin,
+            left_margin + left_distance_one / 2,
+            left_margin + 3 * left_distance_one / 4,
             left_margin + 7 * left_distance_one / 8,
-            left_margin + left_distance_one, 
-            left_margin + left_distance_one + left_distance_two / 2, 
-            left_margin + left_distance_one + 3 * left_distance_two / 4, 
+            left_margin + left_distance_one,
+            left_margin + left_distance_one + left_distance_two / 2,
+            left_margin + left_distance_one + 3 * left_distance_two / 4,
             left_margin + left_distance_one + 7 * left_distance_two / 8,
-            left_margin + left_distance_one + left_distance_two, 
-            left_margin + left_distance_one + left_distance_two - left_distance_three / 4, 
-            left_margin + left_distance_one + left_distance_two - left_distance_three / 2, 
+            left_margin + left_distance_one + left_distance_two,
+            left_margin + left_distance_one + left_distance_two - left_distance_three / 4,
+            left_margin + left_distance_one + left_distance_two - left_distance_three / 2,
             left_margin + left_distance_one + left_distance_two - 3 * left_distance_three / 4,
-            left_margin + medium_pic_size + horizontal_margin, left_margin + (medium_pic_size + horizontal_margin) / 2, left_margin + (medium_pic_size + horizontal_margin) / 4, 
+            left_margin + medium_pic_size + horizontal_margin, left_margin + (medium_pic_size + horizontal_margin) / 2, left_margin + (medium_pic_size + horizontal_margin) / 4,
             left_margin + (medium_pic_size + horizontal_margin) / 8,
             left_margin,
         ]
         sizeOutputRange = [
-            medium_pic_size, 
-            medium_pic_size - (medium_pic_size - smaller_pic_size) / 4, 
-            medium_pic_size - (medium_pic_size - smaller_pic_size) / 2, 
+            medium_pic_size,
+            medium_pic_size - (medium_pic_size - smaller_pic_size) / 4,
+            medium_pic_size - (medium_pic_size - smaller_pic_size) / 2,
             medium_pic_size - 3 * (medium_pic_size - smaller_pic_size) / 4,
-            smaller_pic_size, 
-            smaller_pic_size + (medium_pic_size - smaller_pic_size) / 4, 
-            smaller_pic_size + (medium_pic_size - smaller_pic_size) / 2, 
+            smaller_pic_size,
+            smaller_pic_size + (medium_pic_size - smaller_pic_size) / 4,
+            smaller_pic_size + (medium_pic_size - smaller_pic_size) / 2,
             smaller_pic_size + 3 * (medium_pic_size - smaller_pic_size) / 4,
-            medium_pic_size, 
-            medium_pic_size + (larger_pic_size - medium_pic_size) / 4, 
-            medium_pic_size + (larger_pic_size - medium_pic_size) / 2, 
+            medium_pic_size,
+            medium_pic_size + (larger_pic_size - medium_pic_size) / 4,
+            medium_pic_size + (larger_pic_size - medium_pic_size) / 2,
             medium_pic_size + 3 * (larger_pic_size - medium_pic_size) / 4,
-            larger_pic_size, 
-            larger_pic_size - (larger_pic_size - medium_pic_size) / 2, 
-            larger_pic_size - 3 * (larger_pic_size - medium_pic_size) / 4, 
+            larger_pic_size,
+            larger_pic_size - (larger_pic_size - medium_pic_size) / 2,
+            larger_pic_size - 3 * (larger_pic_size - medium_pic_size) / 4,
             larger_pic_size - 7 * (larger_pic_size - medium_pic_size) / 8,
             medium_pic_size
         ]
-        return ( 
+        return (
             <View style={{ height: larger_pic_size + smaller_pic_size + center_margin, width: '100%' }}>
                 <TouchableWithoutFeedback onPress={this._firstImagePressed.bind(this)}>
-                    {this.props.source_one === "" ?
-                        <Animated.View
-                            style={{
-                                position: 'absolute',
-                                top: this.state.animated1.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: topOutputRange
-                                }),
-                                left: this.state.animated1.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: leftOutputRange
-                                }),
-                                height: this.state.animated1.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: sizeOutputRange
-                                }),
-                                borderRadius: this.state.animated1.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: sizeOutputRange.map(function(value) {return value/2})
-                                }),
-                                width: this.state.animated1.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: sizeOutputRange
-                                })
-                            }}
-                        />
-                        :
-                        <Animated.Image
-                            style={{
-                                position: 'absolute',
-                                top: this.state.animated1.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: topOutputRange
-                                }),
-                                left: this.state.animated1.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: leftOutputRange
-                                }),
-                                height: this.state.animated1.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: sizeOutputRange
-                                }),
-                                borderRadius: this.state.animated1.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: sizeOutputRange.map(function(value) {return value/2})
-                                }),
-                                width: this.state.animated1.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: sizeOutputRange
-                                })
-                            }}
-                            source={{ uri: `data:image/gif;base64,${this.props.source_one}` }}
-                        />
-                    }
+                    <Animated.Image
+                        style={{
+                            position: 'absolute',
+                            top: this.state.animated1.interpolate({
+                                inputRange: inputRange,
+                                outputRange: topOutputRange
+                            }),
+                            left: this.state.animated1.interpolate({
+                                inputRange: inputRange,
+                                outputRange: leftOutputRange
+                            }),
+                            height: this.state.animated1.interpolate({
+                                inputRange: inputRange,
+                                outputRange: sizeOutputRange
+                            }),
+                            borderRadius: this.state.animated1.interpolate({
+                                inputRange: inputRange,
+                                outputRange: sizeOutputRange.map(function (value) { return value / 2 })
+                            }),
+                            width: this.state.animated1.interpolate({
+                                inputRange: inputRange,
+                                outputRange: sizeOutputRange
+                            })
+                        }}
+                        source={
+                            !this.props.loadedPics ? null : 
+                            this.props.source_one.length > 0 ?
+                                { uri: `data:image/gif;base64,${this.props.source_one}` }
+                                : _getAvatar(this.props.profile_name, 1)
+                        }
+                    />
+
                 </TouchableWithoutFeedback>
                 <TouchableWithoutFeedback onPress={this._secondImagePressed.bind(this)}>
-                    {this.props.source_two === "" ?
-                        <Animated.View
-                            style={{
-                                position: 'absolute',
-                                top: this.state.animated2.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: topOutputRange
-                                }),
-                                left: this.state.animated2.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: leftOutputRange
-                                }),
-                                height: this.state.animated2.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: sizeOutputRange
-                                }),
-                                borderRadius: this.state.animated2.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: sizeOutputRange.map(function(value) {return value/2})
-                                }),
-                                width: this.state.animated2.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: sizeOutputRange
-                                })
-                            }}
-                        />
-                        :
-                        <Animated.Image
-                            style={{
-                                position: 'absolute',
-                                top: this.state.animated2.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: topOutputRange
-                                }),
-                                left: this.state.animated2.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: leftOutputRange
-                                }),
-                                height: this.state.animated2.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: sizeOutputRange
-                                }),
-                                borderRadius: this.state.animated2.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: sizeOutputRange.map(function(value) {return value/2})
-                                }),
-                                width: this.state.animated2.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: sizeOutputRange
-                                })
-                            }}
-                            source={{ uri: `data:image/gif;base64,${this.props.source_two}` }}
-                        />
-                    }
+                    <Animated.Image
+                        style={{
+                            position: 'absolute',
+                            top: this.state.animated2.interpolate({
+                                inputRange: inputRange,
+                                outputRange: topOutputRange
+                            }),
+                            left: this.state.animated2.interpolate({
+                                inputRange: inputRange,
+                                outputRange: leftOutputRange
+                            }),
+                            height: this.state.animated2.interpolate({
+                                inputRange: inputRange,
+                                outputRange: sizeOutputRange
+                            }),
+                            borderRadius: this.state.animated2.interpolate({
+                                inputRange: inputRange,
+                                outputRange: sizeOutputRange.map(function (value) { return value / 2 })
+                            }),
+                            width: this.state.animated2.interpolate({
+                                inputRange: inputRange,
+                                outputRange: sizeOutputRange
+                            })
+                        }}
+                        source={
+                            !this.props.loadedPics ? null : 
+                            this.props.source_two.length > 0 ?
+                                { uri: `data:image/gif;base64,${this.props.source_two}` }
+                                : _getAvatar(this.props.profile_name, 2)
+                        }
+                    />
+
                 </TouchableWithoutFeedback>
                 <TouchableWithoutFeedback onPress={this._thirdImagePressed.bind(this)}>
-                    {this.props.source_three === "" ?
-                        <Animated.View
-                            style={{
-                                position: 'absolute',
-                                top: this.state.animated3.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: topOutputRange
-                                }),
-                                left: this.state.animated3.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: leftOutputRange
-                                }),
-                                height: this.state.animated3.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: sizeOutputRange
-                                }),
-                                borderRadius: this.state.animated3.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: sizeOutputRange.map(function(value) {return value/2})
-                                }),
-                                width: this.state.animated3.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: sizeOutputRange
-                                })
-                            }}
-                        />
-                        :
-                        <Animated.Image
-                            style={{
-                                position: 'absolute',
-                                top: this.state.animated3.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: topOutputRange
-                                }),
-                                left: this.state.animated3.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: leftOutputRange
-                                }),
-                                height: this.state.animated3.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: sizeOutputRange
-                                }),
-                                borderRadius: this.state.animated3.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: sizeOutputRange.map(function(value) {return value/2})
-                                }),
-                                width: this.state.animated3.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: sizeOutputRange
-                                })
-                            }}
-                            source={{ uri: `data:image/gif;base64,${this.props.source_three}` }}
-                        />
-                    }
+                    <Animated.Image
+                        style={{
+                            position: 'absolute',
+                            top: this.state.animated3.interpolate({
+                                inputRange: inputRange,
+                                outputRange: topOutputRange
+                            }),
+                            left: this.state.animated3.interpolate({
+                                inputRange: inputRange,
+                                outputRange: leftOutputRange
+                            }),
+                            height: this.state.animated3.interpolate({
+                                inputRange: inputRange,
+                                outputRange: sizeOutputRange
+                            }),
+                            borderRadius: this.state.animated3.interpolate({
+                                inputRange: inputRange,
+                                outputRange: sizeOutputRange.map(function (value) { return value / 2 })
+                            }),
+                            width: this.state.animated3.interpolate({
+                                inputRange: inputRange,
+                                outputRange: sizeOutputRange
+                            })
+                        }}
+                        source={
+                            !this.props.loadedPics ? null : 
+                            this.props.source_three.length > 0 ?
+                                { uri: `data:image/gif;base64,${this.props.source_three}` }
+                                : _getAvatar(this.props.profile_name, 3)
+                        }
+                    />
                 </TouchableWithoutFeedback>
                 <TouchableWithoutFeedback onPress={this._fourthImagePressed.bind(this)}>
-                    {this.props.source_four === "" ?
-                        <Animated.View
-                            style={{
-                                position: 'absolute',
-                                top: this.state.animated4.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: topOutputRange
-                                }),
-                                left: this.state.animated4.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: leftOutputRange
-                                }),
-                                height: this.state.animated4.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: sizeOutputRange
-                                }),
-                                borderRadius: this.state.animated4.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: sizeOutputRange.map(function(value) {return value/2})
-                                }),
-                                width: this.state.animated4.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: sizeOutputRange
-                                })
-                            }}
-                        />
-                        :
-                        <Animated.Image
-                            style={{
-                                position: 'absolute',
-                                top: this.state.animated4.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: topOutputRange
-                                }),
-                                left: this.state.animated4.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: leftOutputRange
-                                }),
-                                height: this.state.animated4.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: sizeOutputRange
-                                }),
-                                borderRadius: this.state.animated4.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: sizeOutputRange.map(function(value) {return value/2})
-                                }),
-                                width: this.state.animated4.interpolate({
-                                    inputRange: inputRange,
-                                    outputRange: sizeOutputRange
-                                })
-                            }}
-                            source={{ uri: `data:image/gif;base64,${this.props.source_four}` }}
-                        />
-                    }
+                    <Animated.Image
+                        style={{
+                            position: 'absolute',
+                            top: this.state.animated4.interpolate({
+                                inputRange: inputRange,
+                                outputRange: topOutputRange
+                            }),
+                            left: this.state.animated4.interpolate({
+                                inputRange: inputRange,
+                                outputRange: leftOutputRange
+                            }),
+                            height: this.state.animated4.interpolate({
+                                inputRange: inputRange,
+                                outputRange: sizeOutputRange
+                            }),
+                            borderRadius: this.state.animated4.interpolate({
+                                inputRange: inputRange,
+                                outputRange: sizeOutputRange.map(function (value) { return value / 2 })
+                            }),
+                            width: this.state.animated4.interpolate({
+                                inputRange: inputRange,
+                                outputRange: sizeOutputRange
+                            })
+                        }}
+                        source={
+                            !this.props.loadedPics ? null : 
+                            this.props.source_four.length > 0 ?
+                                { uri: `data:image/gif;base64,${this.props.source_four}` }
+                                : _getAvatar(this.props.profile_name, 4)
+                        }
+                    />
                 </TouchableWithoutFeedback>
             </View>
         )

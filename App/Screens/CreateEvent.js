@@ -13,6 +13,8 @@ import StaticGlobal from '../Functions/StaticGlobal.js'
 import { parseDate } from '../Functions/TimeFuncs'
 import { Icon } from 'react-native-elements'
 
+import { _getAvatar } from '../Functions/AvatarGen'
+
 const heightPixel = (Dimensions.get('window').height - Header.HEIGHT) / 667
 const widthPixel = Dimensions.get('window').width / 375
 
@@ -114,6 +116,7 @@ export default class CreateEvent extends Component {
             }
         }.bind(this));
     }
+
     _retrieveProfilePicture () {
         fetch(StaticGlobal.database_url + '/getUserProfilePictures', {
             method: 'POST',
@@ -208,7 +211,11 @@ export default class CreateEvent extends Component {
                     <View style={[styles.background, { opacity: 1 }]}>
                         <View style={{ height: creatorPicMargins }} />
                         <Image
-                            source={{ uri: `data:image/gif;base64,${this.state.myPicture}` }}
+                            source={
+                                this.state.myPicture.length > 0 ?
+                                { uri: `data:image/gif;base64,${this.state.myPicture}` }
+                                : _getAvatar(global.profile_name, 1)
+                            }
                             style={styles.creatorPic}
                         />
                         <View style={{ height: creatorPicMargins }} />
